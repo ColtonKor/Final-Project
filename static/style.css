@@ -1,0 +1,33 @@
+:root {
+    --main-text: #FFFFFF;
+    --secondary: #BDD9BF;
+    --background: #2E4052;
+}
+body {
+    background-color: var(--background);
+}
+
+.click-text {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.navigation {
+    display: flex;
+    position: sticky;
+    top: 0;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    border-bottom: 2px solid var(--secondary);
+    border-radius: 22px;
+    box-shadow: 0 4px 8px rgba(0, 0, 1, 0.2);
+
+    color: var(--main-text);
+}
+
+.fortnite-items {
+    display: grid;
+}
