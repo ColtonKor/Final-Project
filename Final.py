@@ -10,22 +10,34 @@ import bcrypt
 import requests
 from flask_mysqldb import MySQL
 from flask_session import Session
+import mysql.connector
 
 
 # create an instance of Flask
 app = Flask(__name__)
+mysql = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="RootPassword",
+    database="multimedia"
+)
+
 app.config['SECRET_KEY'] = 'csumb-otter'
 bootstrap = Bootstrap5(app)
 
 
 @app.route('/steam')
 def steam():
+    if not session.get('authenticated'):
+        return redirect('/')
     return render_template('steam.html')
 
 # fortnite page (lists skins)
 # maybe categorize between pickaxes or skins
 @app.route('/fortnite')
 def fortnite():
+    if not session.get('authenticated'):
+        return redirect('/')
     return render_template('fornite.html')
 
 
@@ -54,19 +66,19 @@ def welcome():
 def login_post():
     username = request.form['username']
     password = request.form['password']
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM users WHERE username = %s', [username])
+    cur = mysql.cursor(dictionary=True)
+    cur.execute('SELECT * FROM User WHERE username = %s', [username])
     user = cur.fetchone()
     if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
         session['authenticated'] = True
         session['user'] = {
-            'id': user['userId'],
+            'id': user['user_id'],
             'username': user['username'],
             'firstName': user['firstName'],
             'lastName': user['lastName'],
             'pfp': user['profilePicture']
         }
-        return render_template('welcome.html')
+        return render_template('home.html')
     return redirect('/')
 
 
@@ -76,9 +88,10 @@ def signup():
     lName = request.form['lastName']
     username = request.form['username']
     password = request.form['password']
+    email = request.form['email']
 
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM users WHERE username = %s', [username])
+    cur = mysql.cursor(dictionary=True)
+    cur.execute('SELECT * FROM User WHERE username = %s', [username])
     if cur.fetchone():
         return 'Username already taken.', 400
 
@@ -86,9 +99,9 @@ def signup():
 
     pfp_url = f'https://robohash.org/{username}.png?set=set4'
 
-    cur.execute('INSERT INTO users (firstName, lastName, username, password, profilePicture) VALUES (%s, %s, %s, %s, %s)',
-                (fName, lName, username, hashed, pfp_url))
-    mysql.connection.commit()
+    cur.execute('INSERT INTO User (firstName, lastName, username, password, profilePicture, email) VALUES (%s, %s, %s, %s, %s, %s)',
+                (fName, lName, username, hashed, pfp_url, email))
+    mysql.commit()
     return render_template('login.html')
 
 # End of the Login Portion of the Code
