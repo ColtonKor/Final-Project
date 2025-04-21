@@ -11,16 +11,19 @@ import requests
 from flask_mysqldb import MySQL
 from flask_session import Session
 import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
+import psycopg2
+import psycopg2.extras
+import base64
 
 
 # create an instance of Flask
+db = SQLAlchemy()
 app = Flask(__name__)
-mysql = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="RootPassword",
-    database="multimedia"
-)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres.bkvgncwmwqudmgkhngiu:ColtonDatabasePassword1@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
+db.init_app(app)
+
 
 app.config['SECRET_KEY'] = 'csumb-otter'
 bootstrap = Bootstrap5(app)
@@ -66,17 +69,19 @@ def welcome():
 def login_post():
     username = request.form['username']
     password = request.form['password']
-    cur = mysql.cursor(dictionary=True)
-    cur.execute('SELECT * FROM User WHERE username = %s', [username])
-    user = cur.fetchone()
-    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+    user = User.query.filter_by(username=username).first()
+    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        profile_picture_base64 = None
+        if user.profilepicture:
+            profile_picture_base64 = base64.b64encode(user.profilepicture).decode('utf-8')
+
         session['authenticated'] = True
         session['user'] = {
-            'id': user['user_id'],
-            'username': user['username'],
-            'firstName': user['firstName'],
-            'lastName': user['lastName'],
-            'pfp': user['profilePicture']
+            'id': user.user_id,
+            'username': user.username,
+            'firstName': user.firstname,
+            'lastName': user.lastname,
+            'pfp': profile_picture_base64
         }
         return render_template('home.html')
     return redirect('/')
@@ -90,18 +95,34 @@ def signup():
     password = request.form['password']
     email = request.form['email']
 
-    cur = mysql.cursor(dictionary=True)
-    cur.execute('SELECT * FROM User WHERE username = %s', [username])
-    if cur.fetchone():
+    if User.query.filter_by(username=username).first():
         return 'Username already taken.', 400
 
-    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
+    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     pfp_url = f'https://robohash.org/{username}.png?set=set4'
 
-    cur.execute('INSERT INTO User (firstName, lastName, username, password, profilePicture, email) VALUES (%s, %s, %s, %s, %s, %s)',
-                (fName, lName, username, hashed, pfp_url, email))
-    mysql.commit()
+    new_user = User(
+        firstname=fName,
+        lastname=lName,
+        username=username,
+        password=hashed,
+        profilepicture=pfp_url,
+        email=email
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
     return render_template('login.html')
 
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    user_id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(100), nullable=False)
+    lastname = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    profilepicture = db.Column(db.String(255))
+    email = db.Column(db.String(120), unique=True, nullable=False)
 # End of the Login Portion of the Code
