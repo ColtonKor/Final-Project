@@ -1,4 +1,3 @@
-import random
 from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
@@ -8,13 +7,7 @@ from PIL import Image
 from datetime import datetime
 import bcrypt
 import requests
-from flask_mysqldb import MySQL
-from flask_session import Session
-import mysql.connector
 from flask_sqlalchemy import SQLAlchemy
-import psycopg2
-import psycopg2.extras
-import base64
 
 
 # create an instance of Flask
@@ -71,17 +64,14 @@ def login_post():
     password = request.form['password']
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-        profile_picture_base64 = None
-        if user.profilepicture:
-            profile_picture_base64 = base64.b64encode(user.profilepicture).decode('utf-8')
-
+        
         session['authenticated'] = True
         session['user'] = {
             'id': user.user_id,
             'username': user.username,
             'firstName': user.firstname,
             'lastName': user.lastname,
-            'pfp': profile_picture_base64
+            'pfp': user.profilepicture
         }
         return render_template('home.html')
     return redirect('/')
