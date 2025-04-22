@@ -3,17 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project</title>
+    <title>Document</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<body>
+    <div class="navigation">
+        <h1> <a href="{{ url_for('welcome') }}" class="click-text">snipr.gg</a></h1>
+        <h1> <a href="{{ url_for('steam') }}" class="click-text">snipr.gg</a></h1>
+        <h1> <a href="{{ url_for('fortnite') }}" class="click-text">snipr.gg</a></h1>
+    </div>
+    
+    <!-- <input type="text" placeholder="Search skins..." id="searchInput"> -->
+    <form action="/sortFortnite" method="POST">
+        <select id="type" name="type">
+            <option value=""></option>
+            <option value="backpack">Back Bling</option>
+            <option value="outfit">Skin</option>
+            <option value="emote">Emote</option>
+            <option value="pickaxe">Pickaxe</option>
+            <option value="spray">Spray</option>
+            <option value="wrap">Wrap</option>
+            <option value="music">Music</option>
+            <option value="petcarrier">Pet Carrier</option>
+            <option value="pet">Pet</option>
+            <option value="loadingscreen">Loading Screen</option>
+            <option value="emoji">Emoticon</option>
+            <option value="contrail">Contrail</option>
+            <option value="shoe">Shoes</option>
+            <option value="glider">Glider</option>
+        </select>
 
-<div class="navigation">
-    <h1> <a href="{{ url_for('welcome') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('steam') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('fortnite') }}" class="click-text">snipr.gg</a></h1>
-</div>
+        <select id="rarity" name="rarity">
+            <option value=""></option>
+            <option value="Epic">Epic</option>
+            <option value="Uncommon">Uncommon</option>
+            <option value="Rare">Rare</option>
+            <option value="Legendary">Legendary</option>
+        </select>
 
-<input type="text" placeholder="Search skins..." id="searchInput">
+        <button class="button">Filter</button>
+    </form>
 
+    <br><br><br>
 
+    <h1>Cosmetics</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        {% for item in list %}
+            <div style="text-align: center;">
+                <img src="{{ item.images.smallIcon }}" alt="{{ item.name }}" width="64" height="64">
+                <p>{{ item.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
 </html>

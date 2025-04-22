@@ -34,7 +34,20 @@ def steam():
 def fortnite():
     if not session.get('authenticated'):
         return redirect('/')
-    return render_template('fornite.html')
+    
+    cosmetics = fetch_cosmetic(None, None)
+    return render_template('fortnite.html', list=cosmetics)
+
+
+@app.route('/sortFortnite', methods=['POST'])
+def sortFortnite():
+    if not session.get('authenticated'):
+        return redirect('/')
+    
+    type = request.form['type']
+    rarity = request.form['rarity']
+    cosmetics = fetch_cosmetic(type, rarity)
+    return render_template('fortnite.html', list=cosmetics)
 
 
 # Start of the Login Portion of the Code
@@ -115,4 +128,15 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     profilepicture = db.Column(db.String(255))
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+
+def fetch_cosmetic(type, rarity):
+    r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
+    all_cosmetics = r.json().get("data", [])
+    filtered_cosmetics = all_cosmetics
+    if type:
+        filtered_cosmetics = [item for item in all_cosmetics if item.get("type", {}).get("value") == type]
+    if rarity:
+        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("rarity", {}).get("backendValue") == "EFortRarity::"+rarity]
+    return filtered_cosmetics
 # End of the Login Portion of the Code
