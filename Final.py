@@ -35,7 +35,7 @@ def fortnite():
     if not session.get('authenticated'):
         return redirect('/')
     
-    cosmetics = fetch_cosmetic(None, None)
+    cosmetics = fetch_cosmetic(None, None, None)
     return render_template('fortnite.html', list=cosmetics)
 
 
@@ -46,7 +46,8 @@ def sortFortnite():
     
     type = request.form['type']
     rarity = request.form['rarity']
-    cosmetics = fetch_cosmetic(type, rarity)
+    search = request.form['search']
+    cosmetics = fetch_cosmetic(type, rarity, search)
     return render_template('fortnite.html', list=cosmetics)
 
 
@@ -130,13 +131,15 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
 
 
-def fetch_cosmetic(type, rarity):
+def fetch_cosmetic(type, rarity, search):
     r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
     all_cosmetics = r.json().get("data", [])
     filtered_cosmetics = all_cosmetics
     if type:
-        filtered_cosmetics = [item for item in all_cosmetics if item.get("type", {}).get("value") == type]
+        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("type", {}).get("value") == type]
     if rarity:
         filtered_cosmetics = [item for item in filtered_cosmetics if item.get("rarity", {}).get("backendValue") == "EFortRarity::"+rarity]
+    if search:
+        filtered_cosmetics = [item for item in filtered_cosmetics if search.lower() in item.get("name", "").lower()]
     return filtered_cosmetics
 # End of the Login Portion of the Code
