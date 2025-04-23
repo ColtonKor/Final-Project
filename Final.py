@@ -34,7 +34,50 @@ def steam():
 def fortnite():
     if not session.get('authenticated'):
         return redirect('/')
-    return render_template('fornite.html')
+    
+    cosmetics = fetch_cosmetic(None, None, None)
+    return render_template('fortnite.html', list=cosmetics)
+
+
+@app.route('/sortFortnite', methods=['POST'])
+def sortFortnite():
+    if not session.get('authenticated'):
+        return redirect('/')
+    
+    type = request.form['type']
+    rarity = request.form['rarity']
+    search = request.form['search']
+    cosmetics = fetch_cosmetic(type, rarity, search)
+    return render_template('fortnite.html', list=cosmetics)
+
+
+@app.route('/addFavorite', methods=['POST'])
+def favoriteCosmetic():
+    image = request.form['image']
+    name = request.form['name']
+    description = request.form['description']
+    introduction = request.form['introduction']
+    type = request.form['type']
+    rarity = request.form['rarity']
+    series = request.form['series']
+    set = request.form['set']
+
+    new_favorite = Favorite(
+        user_id=session['user']['id'],
+        skinname=name,
+        description=description,
+        series=series,
+        rarity=rarity,
+        set=set,
+        type=type,
+        image=image,
+        introduced=introduction
+    )
+
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return redirect('/fortnite')
 
 
 # Start of the Login Portion of the Code
@@ -108,11 +151,38 @@ def signup():
 
 class User(db.Model):
     __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     firstname = db.Column(db.String(100), nullable=False)
     lastname = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     profilepicture = db.Column(db.String(255))
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+
+class Favorite(db.Model):
+    __tablename__ = 'favorite'
+    skin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    skinname = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    series = db.Column(db.String(80), nullable=False)
+    rarity = db.Column(db.String(255), nullable=False)
+    set = db.Column(db.String(255))
+    type = db.Column(db.String(255))
+    image = db.Column(db.String(120), unique=True, nullable=False)
+    introduced = db.Column(db.String(120), nullable=False)
+
+
+def fetch_cosmetic(type, rarity, search):
+    r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
+    all_cosmetics = r.json().get("data", [])
+    filtered_cosmetics = all_cosmetics
+    if type:
+        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("type", {}).get("value") == type]
+    if rarity:
+        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("rarity", {}).get("backendValue") == "EFortRarity::"+rarity]
+    if search:
+        filtered_cosmetics = [item for item in filtered_cosmetics if search.lower() in item.get("name", "").lower()]
+    return filtered_cosmetics
 # End of the Login Portion of the Code

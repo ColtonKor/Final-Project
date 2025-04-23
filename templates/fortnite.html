@@ -3,17 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project</title>
+    <title>Fortnite Cosmetics</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<body>
+    <div class="navigation">
+        <h1> <a href="{{ url_for('welcome') }}" class="click-text">snipr.gg</a></h1>
+        <h1> <a href="{{ url_for('steam') }}" class="click-text">snipr.gg</a></h1>
+        <h1> <a href="{{ url_for('fortnite') }}" class="click-text">snipr.gg</a></h1>
+    </div>
+    
+    <!-- <input type="text" placeholder="Search skins..." id="searchInput"> -->
+    <form action="/sortFortnite" method="POST">
+        <select id="type" name="type">
+            <option value=""></option>
+            <option value="backpack">Back Bling</option>
+            <option value="outfit">Skin</option>
+            <option value="emote">Emote</option>
+            <option value="pickaxe">Pickaxe</option>
+            <option value="spray">Spray</option>
+            <option value="wrap">Wrap</option>
+            <option value="music">Music</option>
+            <option value="petcarrier">Pet Carrier</option>
+            <option value="pet">Pet</option>
+            <option value="loadingscreen">Loading Screen</option>
+            <option value="emoji">Emoticon</option>
+            <option value="contrail">Contrail</option>
+            <option value="shoe">Shoes</option>
+            <option value="glider">Glider</option>
+        </select>
 
-<div class="navigation">
-    <h1> <a href="{{ url_for('welcome') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('steam') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('fortnite') }}" class="click-text">snipr.gg</a></h1>
-</div>
+        <select id="rarity" name="rarity">
+            <option value=""></option>
+            <option value="Epic">Epic</option>
+            <option value="Uncommon">Uncommon</option>
+            <option value="Rare">Rare</option>
+            <option value="Legendary">Legendary</option>
+        </select>
 
-<input type="text" placeholder="Search skins..." id="searchInput">
+        <input type="text" id="search" name="search" placeholder="Search Cosmetics">
+
+        <button class="button">Filter</button>
+    </form>
+
+    <br><br><br>
+
+    <h1>Cosmetics</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        {% for item in list %}
+            <div style="text-align: center;">
+                <img 
+                    src="{{ item.images.smallIcon }}" 
+                    alt="{{ item.name }}" 
+                    width="64" 
+                    height="64"
+                    onclick="openModal(this)"
+                    data-name="{{ item.name }}"
+                    data-description="{{ item.description }}"
+                    data-image="{{ item.images.icon }}"
+                    data-type="{{ item.type.displayValue }}"
+                    data-rarity="{{ item.rarity.backendValue.replace('EFortRarity::', '') }}"
+                    {% if item.series is defined %}
+                        data-series="{{ item.series.value }}"
+                    {% else %}
+                        data-series="N/A"
+                    {% endif %}
+                    {% if item.set is defined %}
+                        data-set="{{ item.set.text }}"
+                    {% else %}
+                        data-set="N/A"
+                    {% endif %}
+                    {% if item.introduction is defined %}
+                        data-introduction="{{ item.introduction.text }}"
+                    {% else %}
+                        data-introduction="N/A"
+                    {% endif %}
+                >
+                <p>{{ item.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
 
 
+    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); background: white; padding: 20px; border: 1px solid #ccc; min-width: 200px;">
+        <button onclick="document.getElementById('myModal').style.display='none'"
+                style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+    
+                <form action="/addFavorite" method="POST">
+                    <!-- Hidden fields to be filled by JS -->
+                    <input type="hidden" id="hiddenImage" name="image">
+                    <input type="hidden" id="hiddenName" name="name">
+                    <input type="hidden" id="hiddenDescription" name="description">
+                    <input type="hidden" id="hiddenType" name="type">
+                    <input type="hidden" id="hiddenRarity" name="rarity">
+                    <input type="hidden" id="hiddenSeries" name="series">
+                    <input type="hidden" id="hiddenSet" name="set">
+                    <input type="hidden" id="hiddenIntroduction" name="introduction">
+                
+                    <!-- What the user sees -->
+                    <img class="modal-image" src="" alt="" style="max-width: 100px;" id="imageDisplay">
+                    <h2 class="modal-title" id="nameDisplay"></h2>
+                    <p class="modal-description" id="descriptionDisplay"></p>
+                    <p class="modal-type" id="typeDisplay"></p>
+                    <p class="modal-rarity" id="rarityDisplay"></p>
+                    <p class="modal-series" id="seriesDisplay"></p>
+                    <p class="modal-set" id="setDisplay"></p>
+                    <p class="modal-introduction" id="introductionDisplay"></p>
+                
+                    <button class="button">Add to Favorites</button>
+                </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='cosmetic.js') }}"></script>
+</body>
 </html>
