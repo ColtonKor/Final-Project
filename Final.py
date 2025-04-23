@@ -51,6 +51,35 @@ def sortFortnite():
     return render_template('fortnite.html', list=cosmetics)
 
 
+@app.route('/addFavorite', methods=['POST'])
+def favoriteCosmetic():
+    image = request.form['image']
+    name = request.form['name']
+    description = request.form['description']
+    introduction = request.form['introduction']
+    type = request.form['type']
+    rarity = request.form['rarity']
+    series = request.form['series']
+    set = request.form['set']
+
+    new_favorite = Favorite(
+        user_id=session['user']['id'],
+        skinname=name,
+        description=description,
+        series=series,
+        rarity=rarity,
+        set=set,
+        type=type,
+        image=image,
+        introduced=introduction
+    )
+
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return redirect('/fortnite')
+
+
 # Start of the Login Portion of the Code
 @app.route('/')
 def login():
@@ -122,13 +151,27 @@ def signup():
 
 class User(db.Model):
     __tablename__ = 'user'
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     firstname = db.Column(db.String(100), nullable=False)
     lastname = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     profilepicture = db.Column(db.String(255))
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+
+class Favorite(db.Model):
+    __tablename__ = 'favorite'
+    skin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    skinname = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+    series = db.Column(db.String(80), nullable=False)
+    rarity = db.Column(db.String(255), nullable=False)
+    set = db.Column(db.String(255))
+    type = db.Column(db.String(255))
+    image = db.Column(db.String(120), unique=True, nullable=False)
+    introduced = db.Column(db.String(120), nullable=False)
 
 
 def fetch_cosmetic(type, rarity, search):
