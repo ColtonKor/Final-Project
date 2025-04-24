@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <nav class="navigation">
+        <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
+        <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ pfp }}" style="width: 2rem; height: auto;"> </a>
+    </nav>
+
+    <div class="profile-container">
+        <img src="{{pfp}}" class="profile-picture">
+        <h1 class="profile-text" style="font-size: 4rem;">
+            {{username}}
+            <br>
+            <p style="font-size: large;">Games:   Skins: </p>
+        </h1>
+    </div>
+
+     <form method="POST" class="btn-container">
+        <div class="{{'steam-btn' if not is_fortnite else 'fortnite-btn'}}">
+            STEAM
+        </div>
+        <div class="{{'fortnite-btn' if is_fortnite else 'steam-btn'}}">
+            FORTNITE
+        </div> <!--i want one to glow when clicked and the other not glow-->
+     </form>
+</body>
+
+</html>

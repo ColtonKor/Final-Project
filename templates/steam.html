@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project</title>
+    <title>Fortnite</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<div class="navigation">
-    <h1> <a href="{{ url_for('welcome') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('steam') }}" class="click-text">snipr.gg</a></h1>
-    <h1> <a href="{{ url_for('fortnite') }}" class="click-text">snipr.gg</a></h1>
-</div>
+<body>
+    <nav class="navigation">
+        <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
+        <a href="{{ url_for('account') }}" class="nav-item"> <img src="/static/images/default-pfp.png"> </a>
+    </nav>
 
-<input type="text" placeholder="Search games..." id="searchInput">
+    <h1 class="header">STEAM</h1>
 
+    <div class="search-container">
+        <input type="text" placeholder="Search games..." class="search-input" id="searchInput">
+        <img src="/static/images/search-icon.png">
+    </div>
+
+</body>
 
 </html>
