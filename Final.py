@@ -34,9 +34,12 @@ def steam():
 def fortnite():
     if not session.get('authenticated'):
         return redirect('/')
+
+    user = session.get('user')
+    pfp = user.get('pfp')
     
     cosmetics = fetch_cosmetic(None, None, None)
-    return render_template('fortnite.html', list=cosmetics)
+    return render_template('fortnite.html', list=cosmetics, pfp=pfp)
 
 
 @app.route('/sortFortnite', methods=['POST'])
@@ -44,11 +47,15 @@ def sortFortnite():
     if not session.get('authenticated'):
         return redirect('/')
     
+    user = session.get('user')
+    pfp = user.get('pfp')
+    username = user.get('username')
+
     type = request.form['type']
     rarity = request.form['rarity']
     search = request.form['search']
     cosmetics = fetch_cosmetic(type, rarity, search)
-    return render_template('fortnite.html', list=cosmetics)
+    return render_template('fortnite.html', list=cosmetics, pfp=pfp, username=username)
 
 
 @app.route('/addFavorite', methods=['POST'])
@@ -94,6 +101,13 @@ def logout():
 def create_account():
     return render_template('signup.html')
 
+@app.route('/account')
+def account():
+    user = session.get('user')
+    pfp = user.get('pfp')
+    username = user.get('username')
+
+    return render_template('account.html', pfp=pfp, username=username)
 @app.route('/welcome')
 def welcome():
     if not session.get('authenticated'):
