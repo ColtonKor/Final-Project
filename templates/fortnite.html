@@ -18,6 +18,8 @@
         <input type="text" placeholder="Search skins..." class="search-input" id="searchInput">
         <img src="/static/images/search-icon.png">
     </div>
+
+    <input type="hidden" name="currentTab" value="1">
     
     <!-- <input type="text" placeholder="Search skins..." id="searchInput"> -->
     <form action="/sortFortnite" method="POST">
@@ -88,7 +90,7 @@
                 <p>{{ item.name }}</p>
             </div>
         {% endfor %}
-
+    </div>
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); background: white; padding: 20px; border: 1px solid #ccc; min-width: 200px;">
         <button id="closeModal">X</button>
         <form action="/addFavorite" method="POST">

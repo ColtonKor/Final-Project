@@ -87,6 +87,18 @@ def favoriteCosmetic():
     return redirect('/fortnite')
 
 
+@app.route('/removeFavorite', methods=['POST'])
+def deleteCosmetic():
+    id = request.form['id']
+    favorite = Favorite.query.filter_by(skin_id=id).first()
+
+    if favorite:
+        db.session.delete(favorite)
+        db.session.commit()
+
+    return redirect('/account')
+
+
 # Start of the Login Portion of the Code
 @app.route('/')
 def login():
@@ -113,9 +125,11 @@ def account():
             is_fortnite = False
 
     user = session.get('user')
-    favorites = Favorite.query.filter_by(user_id=user.get('id')).all()
+    favoriteCosmetics = Favorite.query.filter_by(user_id=user.get('id')).all()
     
-    return render_template('account.html', user=user, favorites=favorites, is_fortnite=is_fortnite)
+    return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, is_fortnite=is_fortnite)
+
+
 @app.route('/welcome')
 def welcome():
     if not session.get('authenticated'):
@@ -206,5 +220,8 @@ def fetch_cosmetic(type, rarity, search):
         filtered_cosmetics = [item for item in filtered_cosmetics if item.get("rarity", {}).get("backendValue") == "EFortRarity::"+rarity]
     if search:
         filtered_cosmetics = [item for item in filtered_cosmetics if search.lower() in item.get("name", "").lower()]
+
+    # if(filtered_cosmetics == all_cosmetics):
+        
     return filtered_cosmetics
 # End of the Login Portion of the Code

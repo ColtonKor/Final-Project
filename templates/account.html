@@ -12,7 +12,7 @@
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
         <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
-
+    <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ is_fortnite }}">
     <div class="profile-container">
         <img src="{{user.get('pfp')}}" class="profile-picture">
         <h1 class="profile-text" style="font-size: 4rem;">
@@ -22,31 +22,79 @@
         </h1>
     </div>
 
-     <form method="POST" class="btn-container">
-        <button type="submit" name="type" value="steam" class="{{'chosen-btn' if not is_fortnite else 'not-chosen-btn'}}">
-            STEAM
-        </button>
-        <button type="submit" name="type" value="fortnite" class="{{'chosen-btn' if is_fortnite else 'not-chosen-btn'}}">
-            FORTNITE
-        </button> 
-     </form>
+    <!-- <form method="POST" class="btn-container"> -->
+    <button type="submit" name="type" value="steam" id="ShowSteam">
+        STEAM
+    </button>
+    <button type="submit" name="type" value="fortnite" id="ShowFortnite">
+        FORTNITE
+    </button> 
 
-     <div class="fortnite-card-container">
-        {%for item in favorites %}
-            <div class="fortnite-card">
-                <img
-                src="{{ item.image }}" 
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;" class="fortnite-card-container" id="Fortnite">
+        {% for item in favoriteCosmetics %}
+            <div style="text-align: center;">
+                <img 
+                    src="{{ item.image }}" 
                     alt="{{ item.skinname }}" 
-                    width="128" 
-                    height="128"
-                    data-name="{{ item.name }}"
+                    width="64" 
+                    height="64"
+                    onclick="openModal(this)"
+                    data-name="{{ item.skinname }}"
+                    data-description="{{ item.description }}"
+                    data-image="{{ item.image }}"
+                    data-type="{{ item.type }}"
+                    data-id="{{ item.skin_id }}"
+                    data-rarity="{{ item.rarity }}"
+                    {% if item.series is defined %}
+                        data-series="{{ item.series }}"
+                    {% else %}
+                        data-series="N/A"
+                    {% endif %}
+                    {% if item.set is defined %}
+                        data-set="{{ item.set }}"
+                    {% else %}
+                        data-set="N/A"
+                    {% endif %}
+                    {% if item.introduction is defined %}
+                        data-introduction="{{ item.introduction }}"
+                    {% else %}
+                        data-introduction="N/A"
+                    {% endif %}
                 >
-                <p>{{ item.name }}</p>
-                <button class="remove-btn"> <img src="/static/images/trash-icon.png"> </button>
+                <p>{{ item.skinname }}</p>
             </div>
         {% endfor %}
-     </div>
-     
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="Steam">
+        <p>You have no games</p>
+    </div>
+
+
+    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); background: white; padding: 20px; border: 1px solid #ccc; min-width: 200px;">
+        <button id="closeModal">X</button>
+        <form action="/removeFavorite" method="POST">
+            <!-- Hidden fields to be filled by JS -->
+            <input type="hidden" id="hiddenId" name="id">
+            
+                
+            <!-- What the user sees -->
+            <img class="modal-image" src="" alt="" style="max-width: 100px;" id="imageDisplay">
+            <h2 class="modal-title" id="nameDisplay"></h2>
+            <p class="modal-description" id="descriptionDisplay"></p>
+            <p class="modal-type" id="typeDisplay"></p>
+            <p class="modal-rarity" id="rarityDisplay"></p>
+            <p class="modal-series" id="seriesDisplay"></p>
+            <p class="modal-set" id="setDisplay"></p>
+            <p class="modal-introduction" id="introductionDisplay"></p>
+                
+            <button class="button">Remove from Favorites</button>
+        </form>
+    </div>
+
+
+    <script src="{{ url_for('static', filename='favorites.js') }}"></script>
 </body>
 
 </html>
