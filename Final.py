@@ -101,13 +101,21 @@ def logout():
 def create_account():
     return render_template('signup.html')
 
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 def account():
-    user = session.get('user')
-    pfp = user.get('pfp')
-    username = user.get('username')
+    is_fortnite = True
 
-    return render_template('account.html', pfp=pfp, username=username)
+    if request.method == 'POST':
+        t = request.form.get('type')
+        if t == 'fortnite':
+            is_fortnite = True
+        else:
+            is_fortnite = False
+
+    user = session.get('user')
+    favorites = Favorite.query.filter_by(user_id=user.get('id')).all()
+    
+    return render_template('account.html', user=user, favorites=favorites, is_fortnite=is_fortnite)
 @app.route('/welcome')
 def welcome():
     if not session.get('authenticated'):

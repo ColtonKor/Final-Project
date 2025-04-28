@@ -154,11 +154,15 @@ body {
     color: var(--main-text)
 }
 
+/* buttons */
+
 .btn-container {
     font-size: 16px;
     max-width: 500px;
     margin: 120px auto;
     padding: 1rem 2rem;
+    padding-bottom: none;
+    margin-bottom: none;
 
     background: none;
     justify-items: center;
@@ -166,7 +170,7 @@ body {
     align-items: center;
 }
 
-.fortnite-btn {
+.chosen-btn {
     font-size: 2rem;
     
     padding-left: 5rem;
@@ -175,14 +179,43 @@ body {
     border-top: none;
     border-right: none;
     border-left: none;
+    text-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    border-bottom-color: var(--secondary);
     color: var(--main-text);
+    font-weight: bolder;
     background: none;
+}
+.not-chosen-btn {
+    font-size: 2rem;
+    
+    padding-left: 5rem;
+    padding-right:5rem;
+
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    text-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    border-bottom-color: var(--secondary-background);
+    color: var(--secondary-background);
+    background: none;
+}
+
+.remove-btn {
+    border-bottom: 2px solid var(--secondary);
+    border-radius: 50%;
+
+    padding: 1rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    background: #FF746C;
+    transition: transform 0.2 ease;
 }
 
 /* fortnite grid*/
 
-.fortnite-items {
-    padding: 2rem 2rem;
+.fortnite-card-container {
+    border-color: #FFFFFF;
+    padding-left: 5rem;
+    padding-right:5rem;
     display: grid;
 }
 

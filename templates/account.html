@@ -10,26 +10,43 @@
 <body>
     <nav class="navigation">
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
-        <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ pfp }}" style="width: 2rem; height: auto;"> </a>
+        <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
 
     <div class="profile-container">
-        <img src="{{pfp}}" class="profile-picture">
+        <img src="{{user.get('pfp')}}" class="profile-picture">
         <h1 class="profile-text" style="font-size: 4rem;">
-            {{username}}
+            {{user.get('username')}}
             <br>
-            <p style="font-size: large;">Games:   Skins: </p>
+            <p style="font-size: large;">Games: Skins: {{ favorites|length }} </p>
         </h1>
     </div>
 
      <form method="POST" class="btn-container">
-        <div class="{{'steam-btn' if not is_fortnite else 'fortnite-btn'}}">
+        <button type="submit" name="type" value="steam" class="{{'chosen-btn' if not is_fortnite else 'not-chosen-btn'}}">
             STEAM
-        </div>
-        <div class="{{'fortnite-btn' if is_fortnite else 'steam-btn'}}">
+        </button>
+        <button type="submit" name="type" value="fortnite" class="{{'chosen-btn' if is_fortnite else 'not-chosen-btn'}}">
             FORTNITE
-        </div> <!--i want one to glow when clicked and the other not glow-->
+        </button> 
      </form>
+
+     <div class="fortnite-card-container">
+        {%for item in favorites %}
+            <div class="fortnite-card">
+                <img
+                src="{{ item.image }}" 
+                    alt="{{ item.skinname }}" 
+                    width="128" 
+                    height="128"
+                    data-name="{{ item.name }}"
+                >
+                <p>{{ item.name }}</p>
+                <button class="remove-btn"> <img src="/static/images/trash-icon.png"> </button>
+            </div>
+        {% endfor %}
+     </div>
+     
 </body>
 
 </html>
