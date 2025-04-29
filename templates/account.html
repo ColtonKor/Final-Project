@@ -31,39 +31,43 @@
 
 
     <div style="display: flex; flex-wrap: wrap; gap: 10px;" class="fortnite-card-container" id="Fortnite">
-        {% for item in favoriteCosmetics %}
-            <div style="text-align: center;">
-                <img 
-                    src="{{ item.image }}" 
-                    alt="{{ item.skinname }}" 
-                    width="64" 
-                    height="64"
-                    onclick="openModal(this)"
-                    data-name="{{ item.skinname }}"
-                    data-description="{{ item.description }}"
-                    data-image="{{ item.image }}"
-                    data-type="{{ item.type }}"
-                    data-id="{{ item.skin_id }}"
-                    data-rarity="{{ item.rarity }}"
-                    {% if item.series is defined %}
-                        data-series="{{ item.series }}"
-                    {% else %}
-                        data-series="N/A"
-                    {% endif %}
-                    {% if item.set is defined %}
-                        data-set="{{ item.set }}"
-                    {% else %}
-                        data-set="N/A"
-                    {% endif %}
-                    {% if item.introduction is defined %}
-                        data-introduction="{{ item.introduction }}"
-                    {% else %}
-                        data-introduction="N/A"
-                    {% endif %}
-                >
-                <p>{{ item.skinname }}</p>
-            </div>
-        {% endfor %}
+        {% if favoriteCosmetics %}
+            {% for item in favoriteCosmetics %}
+                <div style="text-align: center;">
+                    <img 
+                        src="{{ item.image }}" 
+                        alt="{{ item.skinname }}" 
+                        width="64" 
+                        height="64"
+                        onclick="openModal(this)"
+                        data-name="{{ item.skinname }}"
+                        data-description="{{ item.description }}"
+                        data-image="{{ item.image }}"
+                        data-type="{{ item.type }}"
+                        data-id="{{ item.skin_id }}"
+                        data-rarity="{{ item.rarity }}"
+                        {% if item.series is defined %}
+                            data-series="{{ item.series }}"
+                        {% else %}
+                            data-series="N/A"
+                        {% endif %}
+                        {% if item.set is defined %}
+                            data-set="{{ item.set }}"
+                        {% else %}
+                            data-set="N/A"
+                        {% endif %}
+                        {% if item.introduction is defined %}
+                            data-introduction="{{ item.introduction }}"
+                        {% else %}
+                            data-introduction="N/A"
+                        {% endif %}
+                    >
+                    <p>{{ item.skinname }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No favorite cosmetics found.</p>
+        {% endif %}
     </div>
 
     <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="Steam">
