@@ -12,17 +12,16 @@
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
         <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
-    <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ is_fortnite }}">
+    <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ '1' if is_fortnite else '0' }}">
     <div class="profile-container">
         <img src="{{user.get('pfp')}}" class="profile-picture">
         <h1 class="profile-text" style="font-size: 4rem;">
             {{user.get('username')}}
             <br>
-            <p style="font-size: large;">Games: Skins: {{ favorites|length }} </p>
+            <p style="font-size: large;">Games: Skins: {{ favoriteCosmetics|length }} </p>
         </h1>
     </div>
 
-    <!-- <form method="POST" class="btn-container"> -->
     <button type="submit" name="type" value="steam" id="ShowSteam">
         STEAM
     </button>

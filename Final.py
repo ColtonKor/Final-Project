@@ -113,16 +113,11 @@ def logout():
 def create_account():
     return render_template('signup.html')
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/account')
 def account():
-    is_fortnite = True
+    current_tab = request.args.get('currentTab')
 
-    if request.method == 'POST':
-        t = request.form.get('type')
-        if t == 'fortnite':
-            is_fortnite = True
-        else:
-            is_fortnite = False
+    is_fortnite = current_tab == '1'
 
     user = session.get('user')
     favoriteCosmetics = Favorite.query.filter_by(user_id=user.get('id')).all()
