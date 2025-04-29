@@ -3,11 +3,7 @@ document.querySelector('#ShowSteam').addEventListener('click', OpenSteam);
 document.querySelector('#closeModal').addEventListener('click', closeModal);
 var modal;
 
-document.getElementById("Steam").style.display = "none";
-document.getElementById("Fortnite").style.display = "none";
-
-var is_fortnite = document.getElementById("hiddenTab").value
-
+var is_fortnite = document.getElementById("hiddenTab").value === "1";
 if(is_fortnite){
     document.getElementById("Steam").style.display = "none";
     document.getElementById("Fortnite").style.display = "flex";
