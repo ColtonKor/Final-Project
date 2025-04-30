@@ -156,6 +156,12 @@ body {
 
 /* buttons */
 
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 .btn-container {
     font-size: 16px;
     max-width: 500px;
@@ -166,6 +172,19 @@ body {
 
     background: none;
     justify-items: center;
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn {
+    font-size: 16px;
+    max-width: 500px;
+    margin-left: 1rem;
+    padding: 1rem 2rem;
+
+    border-radius: 50px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    background: var(--secondary-background);
     display: flex;
     align-items: center;
 }
@@ -200,23 +219,64 @@ body {
     background: none;
 }
 
-.remove-btn {
-    border-bottom: 2px solid var(--secondary);
+.back-btn {
+    border: none;
     border-radius: 50%;
 
-    padding: 1rem;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    background: #FF746C;
-    transition: transform 0.2 ease;
+    margin-top: 1rem;
+    padding: 8px;
+    background: var(--background);
+    border-bottom-color: var(--secondary);
 }
 
-/* fortnite grid*/
+.add-btn {
+    border: none;
+    border-radius: 50%;
+
+    margin-top: 1rem;
+    padding: 8px;
+    background: var(--secondary);
+}
+
+.remove-btn {
+    border: none;
+    border-radius: 50%;
+
+    margin-top: 1rem;
+    padding: 8px;
+    background: #FF746C;
+}
+
+/*grid for cosmetics*/
+
+.cosmetic-container {
+    margin-left: 6rem;
+    margin-right: auto;
+}
 
 .fortnite-card-container {
-    border-color: #FFFFFF;
-    padding-left: 5rem;
-    padding-right:5rem;
-    display: grid;
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 2rem;
+}
+
+.fortnite-card {
+    text-align: center;
+    padding: 1rem;
+
+    border-radius: 1rem;
+    background-color: var(--secondary-background);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    color: var(--main-text)
+}
+.fortnite-info {
+    text-align: left;
+    padding: 1rem;
+
+    border-radius: 1rem;
+    background-color: var(--secondary-background);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    color: var(--main-text)
 }
 
 /*mobile use*/
