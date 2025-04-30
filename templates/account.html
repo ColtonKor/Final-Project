@@ -22,69 +22,72 @@
         </h1>
     </div>
 
-    <button type="submit" name="type" value="steam" id="ShowSteam">
-        STEAM
-    </button>
-    <button type="submit" name="type" value="fortnite" id="ShowFortnite">
-        FORTNITE
-    </button> 
+    
+    <div style="display: flex; justify-content: center; padding-top: 4rem;">
+        <button type="submit" name="type" value="steam" id="ShowSteam">
+            STEAM
+        </button>
+        <button type="submit" name="type" value="fortnite" id="ShowFortnite">
+            FORTNITE
+        </button> 
+    </div>
+    
+    <div style="display: flex; justify-content: center; padding-top: 4rem;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;" class="fortnite-card-container" id="Fortnite">
+            {% if favoriteCosmetics %}
+                {% for item in favoriteCosmetics %}
+                    <div class="fortnite-card">
+                        <img 
+                            src="{{ item.image }}" 
+                            alt="{{ item.skinname }}" 
+                            width="128" 
+                            height="128"
+                            onclick="openModal(this)"
+                            data-name="{{ item.skinname }}"
+                            data-description="{{ item.description }}"
+                            data-image="{{ item.image }}"
+                            data-type="{{ item.type }}"
+                            data-id="{{ item.skin_id }}"
+                            data-rarity="{{ item.rarity }}"
+                            {% if item.series is defined %}
+                                data-series="{{ item.series }}"
+                            {% else %}
+                                data-series="N/A"
+                            {% endif %}
+                            {% if item.set is defined %}
+                                data-set="{{ item.set }}"
+                            {% else %}
+                                data-set="N/A"
+                            {% endif %}
+                            {% if item.introduction is defined %}
+                                data-introduction="{{ item.introduction }}"
+                            {% else %}
+                                data-introduction="N/A"
+                            {% endif %}
+                        >
+                        <p>{{ item.skinname }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">No favorite cosmetics found.</p>
+            {% endif %}
+        </div>
 
-
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;" class="fortnite-card-container" id="Fortnite">
-        {% if favoriteCosmetics %}
-            {% for item in favoriteCosmetics %}
-                <div style="text-align: center;">
-                    <img 
-                        src="{{ item.image }}" 
-                        alt="{{ item.skinname }}" 
-                        width="64" 
-                        height="64"
-                        onclick="openModal(this)"
-                        data-name="{{ item.skinname }}"
-                        data-description="{{ item.description }}"
-                        data-image="{{ item.image }}"
-                        data-type="{{ item.type }}"
-                        data-id="{{ item.skin_id }}"
-                        data-rarity="{{ item.rarity }}"
-                        {% if item.series is defined %}
-                            data-series="{{ item.series }}"
-                        {% else %}
-                            data-series="N/A"
-                        {% endif %}
-                        {% if item.set is defined %}
-                            data-set="{{ item.set }}"
-                        {% else %}
-                            data-set="N/A"
-                        {% endif %}
-                        {% if item.introduction is defined %}
-                            data-introduction="{{ item.introduction }}"
-                        {% else %}
-                            data-introduction="N/A"
-                        {% endif %}
-                    >
-                    <p>{{ item.skinname }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No favorite cosmetics found.</p>
-        {% endif %}
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="Steam">
+            <p style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">You have no games</p>
+        </div>
     </div>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="Steam">
-        <p>You have no games</p>
-    </div>
-
-
-    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); background: white; padding: 20px; border: 1px solid #ccc; min-width: 200px;">
-        <button id="closeModal">X</button>
+    <div id="myModal" style="position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
+        <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/removeFavorite" method="POST">
             <!-- Hidden fields to be filled by JS -->
             <input type="hidden" id="hiddenId" name="id">
             
                 
             <!-- What the user sees -->
-            <img class="modal-image" src="" alt="" style="max-width: 100px;" id="imageDisplay">
-            <h2 class="modal-title" id="nameDisplay"></h2>
+            <img class="modal-image" src="" alt="" style="max-width: 128px; max-height: auto; border-radius: 1rem;" id="imageDisplay">
+            <h2 style="font-weight: bold;" class="modal-title" id="nameDisplay"></h2>
             <p class="modal-description" id="descriptionDisplay"></p>
             <p class="modal-type" id="typeDisplay"></p>
             <p class="modal-rarity" id="rarityDisplay"></p>
@@ -92,7 +95,7 @@
             <p class="modal-set" id="setDisplay"></p>
             <p class="modal-introduction" id="introductionDisplay"></p>
                 
-            <button class="button">Remove from Favorites</button>
+            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
         </form>
     </div>
 
