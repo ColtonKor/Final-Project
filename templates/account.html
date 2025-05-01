@@ -85,11 +85,8 @@
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
         <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/removeFavorite" method="POST">
-            <!-- Hidden fields to be filled by JS -->
             <input type="hidden" id="hiddenId" name="id">
             
-                
-            <!-- What the user sees -->
             <img class="modal-image" src="" alt="" style="max-width: 128px; max-height: auto; border-radius: 1rem;" id="imageDisplay">
             <h2 style="font-weight: bold;" class="modal-title" id="nameDisplay"></h2>
             <p class="modal-description" id="descriptionDisplay"></p>

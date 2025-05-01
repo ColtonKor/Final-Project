@@ -97,8 +97,8 @@
     </div>
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
         <button id="closeModal"><img src="/static/images/arrow-icon.png"></button>
-        <form action="/addFavorite" method="POST">
-            <!-- Hidden fields to be filled by JS -->
+        
+        <form id="addFavoriteForm">
             <input type="hidden" id="hiddenImage" name="image">
             <input type="hidden" id="hiddenName" name="name">
             <input type="hidden" id="hiddenDescription" name="description">
@@ -107,8 +107,7 @@
             <input type="hidden" id="hiddenSeries" name="series">
             <input type="hidden" id="hiddenSet" name="set">
             <input type="hidden" id="hiddenIntroduction" name="introduction">
-                
-            <!-- What the user sees -->
+            
             <img class="modal-image" src="" alt="" style="max-width: 128px; max-height: auto; border-radius: 1rem;" id="imageDisplay">
             <h2 style="font-weight: bold;" class="modal-title" id="nameDisplay"></h2>
             <p class="modal-description" id="descriptionDisplay"></p>
@@ -117,8 +116,8 @@
             <p class="modal-series" id="seriesDisplay"></p>
             <p class="modal-set" id="setDisplay"></p>
             <p class="modal-introduction" id="introductionDisplay"></p>
-                
-            <button class="add-btn"><img src="/static/images/add-icon.png"></button>
+
+            <button type="submit" class="add-btn"><img src="/static/images/add-icon.png"></button>
         </form>
     </div>
 

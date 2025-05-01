@@ -91,7 +91,7 @@ def favoriteCosmetic():
     db.session.add(new_favorite)
     db.session.commit()
 
-    return redirect('/fortnite')
+    return jsonify({'success': True})
 
 
 @app.route('/removeFavorite', methods=['POST'])
