@@ -1,6 +1,7 @@
 document.querySelector('#closeModal').addEventListener('click', closeModal);
 var modal;
 
+
 function openModal(imgElement) {
     const name = imgElement.dataset.name;
     const description = imgElement.dataset.description;

@@ -8,11 +8,17 @@ from datetime import datetime
 import bcrypt
 import requests
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 
 
 # create an instance of Flask
 db = SQLAlchemy()
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'MultimediaFinalProject12@gmail.com'  # Use environment variables in production
+app.config['MAIL_PASSWORD'] = 'halz raws xxjf wxmb'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres.bkvgncwmwqudmgkhngiu:ColtonDatabasePassword1@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
 db.init_app(app)
@@ -20,6 +26,7 @@ db.init_app(app)
 
 app.config['SECRET_KEY'] = 'csumb-otter'
 bootstrap = Bootstrap5(app)
+mail = Mail(app)
 
 
 @app.route('/steam')
@@ -124,6 +131,35 @@ def account():
     
     return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, is_fortnite=is_fortnite)
 
+@app.route('/emailUser', methods=['POST'])
+def emailAvailability():
+    email_body = f""
+
+    user = session.get('user')
+    favoriteCosmetics = Favorite.query.filter_by(user_id=user.get('id')).all()
+    currentShop = fetch_fortnite_shop()
+    notified_items = set()
+
+    for item in favoriteCosmetics:
+        for entry in currentShop['entries']:
+            for br_item in entry.get('brItems', []):
+                if item.skinname.lower() == br_item['name'].lower():
+                    if item.skinname.lower() not in notified_items:
+                        email_body += f"Your favorited item: {item.skinname} is currently in the shop.\n"
+                        notified_items.add(item.skinname.lower())
+
+    msg = Message(
+        subject='One or more favorited items are in the Shop!',
+        sender=app.config['MAIL_USERNAME'],
+        recipients=[session['user']['email']],
+        body=email_body
+    )
+
+    if(email_body):
+        mail.send(msg)
+   
+    return redirect('/account')
+
 
 @app.route('/welcome')
 def welcome():
@@ -145,6 +181,7 @@ def login_post():
             'username': user.username,
             'firstName': user.firstname,
             'lastName': user.lastname,
+            'email' : user.email,
             'pfp': user.profilepicture
         }
         return render_template('home.html')
@@ -219,4 +256,10 @@ def fetch_cosmetic(type, rarity, search):
     # if(filtered_cosmetics == all_cosmetics):
         
     return filtered_cosmetics
+
+
+def fetch_fortnite_shop():
+    r = requests.get('https://fortnite-api.com/v2/shop')
+    all_cosmetics = r.json().get("data", [])
+    return all_cosmetics
 # End of the Login Portion of the Code

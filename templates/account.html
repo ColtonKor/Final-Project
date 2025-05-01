@@ -10,7 +10,7 @@
 <body>
     <nav class="navigation">
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
-        <a href="{{ url_for('account') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
+        <a href="{{ url_for('logout') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
     <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ '1' if is_fortnite else '0' }}">
     <div class="profile-container">
@@ -21,6 +21,10 @@
             <p style="font-size: large;">Games: Skins: {{ favoriteCosmetics|length }} </p>
         </h1>
     </div>
+
+    <form action="/emailUser" method="POST">
+        <button>Email Availability</button>
+    </form>
 
     
     <div style="display: flex; justify-content: center; padding-top: 4rem;">
@@ -78,7 +82,7 @@
         </div>
     </div>
 
-    <div id="myModal" style="position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
+    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
         <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/removeFavorite" method="POST">
             <!-- Hidden fields to be filled by JS -->
