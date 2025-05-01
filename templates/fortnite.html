@@ -17,6 +17,7 @@
 
     <input type="hidden" name="currentTab" value="1">
     <div  class="cosmetic-container">
+
     <!-- <input type="text" placeholder="Search skins..." id="searchInput"> -->
     <form action="/sortFortnite" method="POST">
         <div class="search-container">
@@ -53,7 +54,7 @@
             </select>
 
             <div class="filter-btn">
-                <button style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">Filter</button>
+                <button class="button" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">Filter</button>
             </div>
         </div>
     </form>
@@ -61,14 +62,13 @@
     <br><br><br>
     <div class="fortnite-card-container">
         {% for item in list %}
-            <div class="fortnite-card">
+            <div class="fortnite-card" onclick="openModal(this)">
                 <img 
                     style="border-radius: 1rem"
                     src="{{ item.images.smallIcon }}" 
                     alt="{{ item.name }}" 
                     width="128" 
                     height="128"
-                    onclick="openModal(this)"
                     data-name="{{ item.name }}"
                     data-description="{{ item.description }}"
                     data-image="{{ item.images.icon }}"
@@ -96,7 +96,7 @@
     </div>
     </div>
     <div id="myModal" style="position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button id="closeModal"><img src="/static/images/arrow-icon.png"></button>
+        <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/addFavorite" method="POST">
             <!-- Hidden fields to be filled by JS -->
             <input type="hidden" id="hiddenImage" name="image">
@@ -120,6 +120,24 @@
                 
             <button class="add-btn"><img src="/static/images/add-icon.png"></button>
         </form>
+    </div>
+    <div class="pagination">
+        {% if has_prev %}
+        <a href="{% if request.endpoint == 'sortFortnite' %}
+             {{ url_for('sortFortnite', page=page - 1, type=type, rarity=rarity, search=search) }}
+         {% else %}
+             {{ url_for('fortnite', page=page - 1) }}
+         {% endif %}"
+        class="page-button">Previous</a>
+        {% endif %}
+        {% if has_next %}
+        <a href="{% if request.endpoint == 'sortFortnite' %}
+             {{ url_for('sortFortnite', page=page + 1, type=type, rarity=rarity, search=search) }}
+         {% else %}
+             {{ url_for('fortnite', page=page + 1) }}
+         {% endif %}"
+        class="page-button">Next</a> 
+        {% endif %}
     </div>
 
     <script src="{{ url_for('static', filename='cosmetic.js') }}"></script>

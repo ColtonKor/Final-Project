@@ -1,7 +1,9 @@
 document.querySelector('#closeModal').addEventListener('click', closeModal);
 var modal;
 
-function openModal(imgElement) {
+function openModal(cardElement) {
+    const imgElement = cardElement.querySelector('img');
+
     const name = imgElement.dataset.name;
     const description = imgElement.dataset.description;
     const image = imgElement.dataset.image;

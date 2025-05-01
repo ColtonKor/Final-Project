@@ -37,25 +37,54 @@ def fortnite():
 
     user = session.get('user')
     pfp = user.get('pfp')
+
+    page = int(request.args.get('page', 1))
+    per_page = 54
+
+    all_cosmetics = fetch_cosmetic(None, None, None)
+
+    #pages
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_cosmetics = all_cosmetics[start:end]
+
+    has_next = len(all_cosmetics) > end
+    has_prev = page > 1
     
-    cosmetics = fetch_cosmetic(None, None, None)
-    return render_template('fortnite.html', list=cosmetics, pfp=pfp)
+    return render_template('fortnite.html', list=paginated_cosmetics, page=page, has_next=has_next, has_prev=has_prev, pfp=pfp)
 
 
-@app.route('/sortFortnite', methods=['POST'])
+@app.route('/sortFortnite', methods=['GET', 'POST'])
 def sortFortnite():
     if not session.get('authenticated'):
         return redirect('/')
     
     user = session.get('user')
     pfp = user.get('pfp')
-    username = user.get('username')
 
-    type = request.form['type']
-    rarity = request.form['rarity']
-    search = request.form['search']
+    if request.method == 'POST':
+        type = request.form.get('type')
+        rarity = request.form.get('rarity')
+        search = request.form.get('search')
+    else:
+        type = request.args.get('type')
+        rarity = request.args.get('rarity')
+        search = request.args.get('search')
+
     cosmetics = fetch_cosmetic(type, rarity, search)
-    return render_template('fortnite.html', list=cosmetics, pfp=pfp, username=username)
+    
+    #pages
+    page = int(request.args.get('page', 1))
+    per_page = 54
+
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_cosmetics = cosmetics[start:end]
+
+    has_next = len(cosmetics) > end
+    has_prev = page > 1
+
+    return render_template('fortnite.html', list=paginated_cosmetics, page=page, has_next=has_next, has_prev=has_prev, pfp=pfp, type=type, rarity=rarity, search=search)
 
 
 @app.route('/addFavorite', methods=['POST'])

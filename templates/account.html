@@ -33,16 +33,15 @@
     </div>
     
     <div style="display: flex; justify-content: center; padding-top: 4rem;">
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;" class="fortnite-card-container" id="Fortnite">
+        <div style="display: flex; flex-wrap: wrap;" class="fortnite-card-container" id="Fortnite">
             {% if favoriteCosmetics %}
                 {% for item in favoriteCosmetics %}
-                    <div class="fortnite-card">
+                    <div class="fortnite-card" onclick="openModal(this)">
                         <img 
                             src="{{ item.image }}" 
                             alt="{{ item.skinname }}" 
                             width="128" 
                             height="128"
-                            onclick="openModal(this)"
                             data-name="{{ item.skinname }}"
                             data-description="{{ item.description }}"
                             data-image="{{ item.image }}"

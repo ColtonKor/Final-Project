@@ -187,6 +187,11 @@ select {
     background: var(--secondary-background);
     display: flex;
     align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.filter-btn:hover{
+    background-color: #1f2b38;
 }
 
 .chosen-btn {
@@ -223,7 +228,6 @@ select {
     border: none;
     border-radius: 50%;
 
-    margin-top: 1rem;
     padding: 8px;
     background: var(--background);
     border-bottom-color: var(--secondary);
@@ -267,8 +271,14 @@ select {
     border-radius: 1rem;
     background-color: var(--secondary-background);
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    color: var(--main-text)
+    color: var(--main-text);
+    transition: transform 0.2 ease;
 }
+
+.fortnite-card:hover {
+    transform: scale(1.1);
+}
+
 .fortnite-info {
     text-align: left;
     padding: 1rem;
@@ -277,6 +287,31 @@ select {
     background-color: var(--secondary-background);
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
     color: var(--main-text)
+}
+
+/*page turns*/
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-button {
+    background-color: var(--secondary-background);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: background-color 0.2s ease;
+}
+
+.page-button:hover {
+    background-color: #1f2b38;
 }
 
 /*mobile use*/
