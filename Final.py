@@ -39,12 +39,16 @@ def steam():
     user = session.get('user')
     pfp = user.get('pfp')
 
-    deals = fetch_sale_games()
+    deals = fetch_free_games(None, None, None, None)
 
-    return render_template('steam.html', saleList=deals, pfp=pfp)
+    genres = sorted(set(game['genre'] for game in deals))
+    platforms = sorted(set(game['platform'] for game in deals))
+    publishers = sorted(set(game['publisher'] for game in deals))
+
+    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers)
 
 #use the fetch_game_title(query) 
-@app.route('/sortSteam')
+@app.route('/sortSteam', methods=['POST'])
 def sortSteam():
     if not session.get('authenticated'):
         return redirect('/')
@@ -52,29 +56,46 @@ def sortSteam():
     user = session.get('user')
     pfp = user.get('pfp')
 
-    deals = fetch_sale_games()
+    genre = request.form['genre']
+    publisher = request.form['publisher']
+    platform = request.form['platform']
+    search = request.form['search']
 
-    return render_template('steam.html', saleList=deals, pfp=pfp)
+    deals = fetch_free_games(genre, publisher, platform, search)
+
+
+    regular = fetch_free_games(None, None, None, None)
+
+    genres = sorted(set(game['genre'] for game in regular))
+    platforms = sorted(set(game['platform'] for game in regular))
+    publishers = sorted(set(game['publisher'] for game in regular))
+
+    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers)
 
 
 @app.route('/addSteam', methods=['POST'])
 def favoriteGame():
-    image = request.form['thumb']
-    name = request.form['title']
-    salePrice = request.form['salePrice']
-    normalPrice = request.form['normalPrice']
-    deal_id = request.form['dealID']
-    steam_id = request.form['steamAppID']
+    title = request.form['title']
+    thumbnail = request.form['thumb']
+    genre = request.form['genre']
+    short_description = request.form['description']
+    platform = request.form['platform']
+    publisher = request.form['publisher']
+    developer = request.form['developer']
+    release_date = request.form['release']
+    url = request.form.get('url')
 
-    new_favorite = Steam(
+    new_favorite = Free(
         user_id=session['user']['id'],
-        image=image,
-        gamename=name,
-        saleprice=salePrice,
-        regularprice=normalPrice,
-        deal_id=deal_id,
-        steam_id=steam_id
-
+        title=title,
+        thumbnail=thumbnail,
+        genre=genre,
+        short_description=short_description,
+        platform=platform,
+        publisher=publisher,
+        developer=developer,
+        release_date=release_date,
+        url=url
     )
 
     db.session.add(new_favorite)
@@ -86,7 +107,7 @@ def favoriteGame():
 @app.route('/removeSteam', methods=['POST'])
 def deleteGame():
     id = request.form['id']
-    favorite = Steam.query.filter_by(game_id=id).first()
+    favorite = Free.query.filter_by(game_id=id).first()
 
     if favorite:
         db.session.delete(favorite)
@@ -205,11 +226,11 @@ def create_account():
 def account():
     current_tab = request.args.get('currentTab')
 
-    is_fortnite = current_tab == '1'
+    is_fortnite = (current_tab == '1')
 
     user = session.get('user')
     favoriteCosmetics = Favorite.query.filter_by(user_id=user.get('id')).all()
-    favoriteGames = Steam.query.filter_by(user_id=user.get('id')).all()
+    favoriteGames = Free.query.filter_by(user_id=user.get('id')).all()
     
     return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, favoriteGames=favoriteGames, is_fortnite=is_fortnite)
 
@@ -248,6 +269,7 @@ def emailAvailability():
 def welcome():
     if not session.get('authenticated'):
         return redirect('/')
+    
     return render_template('home.html')
 
 
@@ -335,6 +357,20 @@ class Steam(db.Model):
     deal_id = db.Column(db.String(255), nullable=False)
     steam_id = db.Column(db.String(255), nullable=False)
 
+class Free(db.Model):
+    __tablename__ = 'free'
+    game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    title = db.Column(db.String(128), nullable=False)
+    thumbnail = db.Column(db.String(256), nullable=False)
+    genre = db.Column(db.String(64), nullable=True)
+    short_description = db.Column(db.String(256), nullable=True)
+    platform = db.Column(db.String(64), nullable=True)
+    publisher = db.Column(db.String(128), nullable=True)
+    developer = db.Column(db.String(128), nullable=True)
+    release_date = db.Column(db.String(256), nullable=True)
+    url = db.Column(db.String(256), nullable=True)
+
 
 def fetch_cosmetic(type, rarity, search):
     r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
@@ -356,6 +392,43 @@ def fetch_fortnite_shop():
     r = requests.get('https://fortnite-api.com/v2/shop')
     all_cosmetics = r.json().get("data", [])
     return all_cosmetics
+
+def fetch_free_games(genre, publisher, platform, search):
+    r = requests.get('https://www.freetogame.com/api/games')
+    all_games = r.json()
+
+    filtered_games = all_games
+
+    if genre:
+        genre = genre.lower().strip()
+        filtered_games = [
+            game for game in filtered_games
+            if genre in normalize_genre(game.get('genre', ''))
+        ]
+
+    if publisher:
+        publisher = publisher.lower()
+        filtered_games = [
+            game for game in filtered_games
+            if publisher in game.get('publisher', '').lower()
+        ]
+
+    if platform:
+        platform = platform.lower()
+        filtered_games = [
+            game for game in filtered_games
+            if platform in game.get('platform', '').lower()
+        ]
+
+    if search:
+        search = search.lower()
+        filtered_games = [
+            game for game in filtered_games
+            if search in game.get('title', '').lower()
+            or search in game.get('short_description', '').lower()
+        ]
+
+    return filtered_games
 
 # Steam Store Games
 def fetch_game_title(query):
@@ -393,3 +466,9 @@ def fetch_sale_games():
     })
 
     return r.json()
+
+
+
+def normalize_genre(genre_str):
+    # Normalize genres to lowercase and split by common separators
+    return [g.strip().lower() for g in genre_str.replace('/', ',').replace('|', ',').split(',') if g.strip()]

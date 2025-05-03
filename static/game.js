@@ -7,24 +7,35 @@ function openModal(cardElement) {
     const imgElement = cardElement.querySelector('img');
 
     const title = imgElement.dataset.title;
-    const salePrice = imgElement.dataset.saleprice;
-    const normalPrice = imgElement.dataset.normalprice;
     const thumb = imgElement.dataset.thumb;
-    const steamAppID = imgElement.dataset.steamid;
+    const genre = imgElement.dataset.genre;
+    const description = imgElement.dataset.description;
+    const platform = imgElement.dataset.platform;
+    const publisher = imgElement.dataset.publisher;
+    const developer = imgElement.dataset.developer;
+    const release = imgElement.dataset.release;
+    const url = imgElement.dataset.url;
 
     modal = document.getElementById("myModal");
 
-    modal.querySelector(".modal-image").src = thumb;
-    modal.querySelector(".modal-title").textContent = title;
-    modal.querySelector(".modal-price").textContent = `Sale Price: $${salePrice}`;
-    modal.querySelector(".modal-normal").textContent = `Normal Price: $${normalPrice}`;
-    modal.querySelector(".modal-steamid").textContent = `Steam App ID: ${steamAppID}`;
+    modal.querySelector("#imageDisplay").src = thumb;
+    modal.querySelector("#titleDisplay").textContent = title;
+    modal.querySelector("#descriptionDisplay").textContent = description;
+    modal.querySelector("#genreDisplay").textContent = `Genre: ${genre}`;
+    modal.querySelector("#platformDisplay").textContent = `Platform: ${platform}`;
+    modal.querySelector("#publisherDisplay").textContent = `Publisher: ${publisher}`;
+    modal.querySelector("#developerDisplay").textContent = `Developer: ${developer}`;
+    modal.querySelector("#releaseDisplay").textContent = `Release Date: ${release}`;
 
     modal.querySelector("input[name='title']").value = title;
-    modal.querySelector("input[name='salePrice']").value = salePrice;
-    modal.querySelector("input[name='normalPrice']").value = normalPrice;
     modal.querySelector("input[name='thumb']").value = thumb;
-    modal.querySelector("input[name='steamAppID']").value = steamAppID;
+    modal.querySelector("input[name='genre']").value = genre;
+    modal.querySelector("input[name='description']").value = description;
+    modal.querySelector("input[name='platform']").value = platform;
+    modal.querySelector("input[name='publisher']").value = publisher;
+    modal.querySelector("input[name='developer']").value = developer;
+    modal.querySelector("input[name='release']").value = release;
+    modal.querySelector("input[name='url']").value = url;
 
     modal.style.display = "block";
 }

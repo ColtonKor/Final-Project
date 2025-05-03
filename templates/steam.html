@@ -16,24 +16,72 @@
 
     <input type="hidden" name="currentTab" value="2">
 
+    <form action="/sortSteam" method="POST">
+        <div class="search-container">
+            <input type="text" placeholder="Search Games" class="search-input" id="search" name="search">
+            <img src="/static/images/search-icon.png">
+        </div>
+
+        <div style="display: flex;">
+            <h1 style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">Games</h1>
+            <select id="genre" name="genre" class="filter-btn" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">
+                <option value="">Genre</option>
+                {% for genre in genres %}
+                    <option value="{{ genre }}">{{ genre }}</option>
+                {% endfor %}
+            </select>
+            
+            <select id="publisher" name="publisher" class="filter-btn" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">
+                <option value="">Publisher</option>
+                {% for publisher in publishers %}
+                    <option value="{{ publisher }}">{{ publisher }}</option>
+                {% endfor %}
+            </select>
+            
+            <select id="platform" name="platform" class="filter-btn" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">
+                <option value="">Platform</option>
+                {% for platform in platforms %}
+                    <option value="{{ platform }}">{{ platform }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="filter-btn">
+                <button class="button" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <br><br>
+
     <div class="cosmetic-container">
-        <h1 style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">Recently on Sale</h1>
         <div class="fortnite-card-container">
-            {% for game in saleList %}
-            <div class="fortnite-card" onclick="openModal(this)">
-                <img
-                    style="border-radius: 1rem"
-                    src="{{ game.thumb }}"
-                    alt="{{ game.title }}"
-                    width="256px" 
-                    height="auto"
-                    data-title="{{ game.title }}"
-                    data-thumb="{{ game.thumb }}"
-                    data-saleprice="{{ game.salePrice }}"
-                    data-normalprice="{{ game.normalPrice }}"
-                    data-steamid="{{ game.steamAppID }}"
-                >
-                <p>{{ game.title }}</p>
+            {% for game in games %}
+            <div class="fortnite-card-wrapper">
+                <div class="fortnite-card" onclick="openModal(this)">
+                    <img
+                        style="border-radius: 1rem"
+                        src="{{ game.thumbnail }}"
+                        alt="{{ game.title }}"
+                        width="256px" 
+                        height="auto"
+                        data-title="{{ game.title }}"
+                        data-thumb="{{ game.thumbnail }}"
+                        data-genre="{{ game.genre }}"
+                        data-description="{{ game.short_description }}"
+                        data-platform="{{ game.platform }}"
+                        data-publisher="{{ game.publisher }}"
+                        data-developer="{{ game.developer }}"
+                        data-release="{{ game.release_date }}"
+                        data-url="{{ game.freetogame_profile_url }}"
+                    >
+                    <p>{{ game.title }}</p>
+                </div>
+                <br>
+                <a href="{{ game.freetogame_profile_url }}" target="_blank">
+                    <button class="play-button">
+                        Play Game Now
+                    </button>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -45,16 +93,22 @@
         <form id="addFavoriteForm">
             <input type="hidden" id="hiddenThumb" name="thumb">
             <input type="hidden" id="hiddenTitle" name="title">
-            <input type="hidden" id="hiddenSalePrice" name="salePrice">
-            <input type="hidden" id="hiddenNormalPrice" name="normalPrice">
-            <input type="hidden" id="hiddenDealID" name="dealID">
-            <input type="hidden" id="hiddenSteamAppID" name="steamAppID">
-    
+            <input type="hidden" id="hiddenGenre" name="genre">
+            <input type="hidden" id="hiddenDescription" name="description">
+            <input type="hidden" id="hiddenPlatform" name="platform">
+            <input type="hidden" id="hiddenPublisher" name="publisher">
+            <input type="hidden" id="hiddenDeveloper" name="developer">
+            <input type="hidden" id="hiddenRelease" name="release">
+            <input type="hidden" id="hiddenUrl" name="url">
+
             <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
             <h2 style="font-weight: bold;" class="modal-title" id="titleDisplay"></h2>
-            <p class="modal-price" id="salePriceDisplay"></p>
-            <p class="modal-normal" id="normalPriceDisplay"></p>
-            <p class="modal-steamid" id="steamIDDisplay"></p>
+            <p class="modal-description" id="descriptionDisplay"></p>
+            <p class="modal-genre" id="genreDisplay"></p>
+            <p class="modal-platform" id="platformDisplay"></p>
+            <p class="modal-publisher" id="publisherDisplay"></p>
+            <p class="modal-developer" id="developerDisplay"></p>
+            <p class="modal-release" id="releaseDisplay"></p>
     
             <button type="submit" class="add-btn"><img src="/static/images/add-icon.png"></button>
         </form>

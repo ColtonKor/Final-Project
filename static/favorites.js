@@ -72,7 +72,6 @@ function openModal(cardElement) {
     modal.querySelector(".modal-series").textContent = series;
     modal.querySelector(".modal-set").textContent = set;
     modal.querySelector(".modal-introduction").textContent = introduction;
-    modal.querySelector(".modal-introduction").textContent = id;
 
     modal.querySelector("input[name='id']").value = id;
 
@@ -83,22 +82,28 @@ function openGameModal(cardElement) {
     const imgElement = cardElement.querySelector('img');
 
     const title = imgElement.dataset.title;
-    const salePrice = imgElement.dataset.saleprice;
-    const normalPrice = imgElement.dataset.normalprice;
     const thumb = imgElement.dataset.thumb;
-    const steamAppID = imgElement.dataset.steamid;
+    const genre = imgElement.dataset.genre;
+    const description = imgElement.dataset.description;
+    const platform = imgElement.dataset.platform;
+    const publisher = imgElement.dataset.publisher;
+    const developer = imgElement.dataset.developer;
+    const release = imgElement.dataset.release;
+
     const id = imgElement.dataset.id;
 
     modal = document.getElementById("myGameModal");
 
-    modal.querySelector(".modal-image").src = thumb;
-    modal.querySelector(".modal-title").textContent = title;
-    modal.querySelector(".modal-price").textContent = `Sale Price: $${salePrice}`;
-    modal.querySelector(".modal-normal").textContent = `Normal Price: $${normalPrice}`;
-    modal.querySelector(".modal-steamid").textContent = `Steam App ID: ${steamAppID}`;
+    modal.querySelector("#imageDisplay").src = thumb;
+    modal.querySelector("#titleDisplay").textContent = title;
+    modal.querySelector("#descriptionDisplay").textContent = description;
+    modal.querySelector("#genreDisplay").textContent = `Genre: ${genre}`;
+    modal.querySelector("#platformDisplay").textContent = `Platform: ${platform}`;
+    modal.querySelector("#publisherDisplay").textContent = `Publisher: ${publisher}`;
+    modal.querySelector("#developerDisplay").textContent = `Developer: ${developer}`;
+    modal.querySelector("#releaseDisplay").textContent = `Release Date: ${release}`;
 
-
-    modal.querySelector("input[name='id']").value = id;    
+    modal.querySelector("input[name='id']").value = id;
 
     modal.style.display = "block";
 }

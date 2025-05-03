@@ -18,7 +18,7 @@
         <h1 class="profile-text" style="font-size: 4rem;">
             {{user.get('username')}}
             <br>
-            <p style="font-size: large;">Games: Skins: {{ favoriteCosmetics|length }} </p>
+            <p style="font-size: large;">Games: {{ favoriteGames|length }} Skins: {{ favoriteCosmetics|length }} </p>
         </h1>
     </div>
 
@@ -79,21 +79,33 @@
             <div class="fortnite-card-container">
                 {% if favoriteGames %}
                     {% for game in favoriteGames %}
-                        <div class="fortnite-card" onclick="openGameModal(this)">
-                            <img
-                                style="border-radius: 1rem"
-                                src="{{ game.image }}"
-                                alt="{{ game.gamename }}"
-                                width="256px" 
-                                height="auto"
-                                data-title="{{ game.gamename }}"
-                                data-thumb="{{ game.image }}"
-                                data-saleprice="{{ game.saleprice }}"
-                                data-normalprice="{{ game.regularprice }}"
-                                data-steamid="{{ game.steam_id }}"
-                                data-id="{{ game.game_id }}"
-                            >
-                            <p>{{ game.title }}</p>
+                        <div class="fortnite-card-wrapper">
+                            <div class="fortnite-card" onclick="openGameModal(this)">
+                                <img
+                                    style="border-radius: 1rem"
+                                    src="{{ game.thumbnail }}"
+                                    alt="{{ game.title }}"
+                                    width="256px" 
+                                    height="auto"
+                                    data-title="{{ game.title }}"
+                                    data-thumb="{{ game.thumbnail }}"
+                                    data-genre="{{ game.genre }}"
+                                    data-description="{{ game.short_description }}"
+                                    data-platform="{{ game.platform }}"
+                                    data-publisher="{{ game.publisher }}"
+                                    data-developer="{{ game.developer }}"
+                                    data-release="{{ game.release_date }}"
+                                    data-url="{{ game.url }}"
+                                    data-id="{{ game.game_id }}"
+                                >
+                                <p>{{ game.title }}</p>
+                            </div>
+                            <br>
+                            <a href="{{ game.url }}" target="_blank">
+                                <button class="play-button">
+                                    Play Game Now
+                                </button>
+                            </a>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -133,13 +145,18 @@
         <form action="/removeSteam" method="POST">
             <input type="hidden" id="hiddenId" name="id">
     
-            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageGameDisplay">
-            <h2 style="font-weight: bold;" class="modal-title" id="titleGameDisplay"></h2>
-            <p class="modal-price" id="salePriceDisplay"></p>
-            <p class="modal-normal" id="normalPriceDisplay"></p>
-            <p class="modal-steamid" id="steamIDDisplay"></p>
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
+            <h2 style="font-weight: bold;" class="modal-title" id="titleDisplay"></h2>
+            <p id="descriptionDisplay"></p>
+            <p id="genreDisplay"></p>
+            <p id="platformDisplay"></p>
+            <p id="publisherDisplay"></p>
+            <p id="developerDisplay"></p>
+            <p id="releaseDisplay"></p>
     
-            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
+            <button class="remove-btn">
+                <img src="/static/images/remove-icon.png">
+            </button>
         </form>
     </div>
 
