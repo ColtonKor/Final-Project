@@ -75,10 +75,36 @@
             {% endif %}
         </div>
 
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;" id="Steam">
-            <p style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">You have no games</p>
+        <div class="cosmetic-container" id="Steam">
+            <div class="fortnite-card-container">
+                {% if favoriteGames %}
+                    {% for game in favoriteGames %}
+                        <div class="fortnite-card" onclick="openGameModal(this)">
+                            <img
+                                style="border-radius: 1rem"
+                                src="{{ game.image }}"
+                                alt="{{ game.gamename }}"
+                                width="256px" 
+                                height="auto"
+                                data-title="{{ game.gamename }}"
+                                data-thumb="{{ game.image }}"
+                                data-saleprice="{{ game.saleprice }}"
+                                data-normalprice="{{ game.regularprice }}"
+                                data-steamid="{{ game.steam_id }}"
+                                data-id="{{ game.game_id }}"
+                            >
+                            <p>{{ game.title }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">No favorite games found.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
+
+    
+
 
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
         <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
@@ -97,6 +123,22 @@
             <p class="modal-set" id="setDisplay"></p>
             <p class="modal-introduction" id="introductionDisplay"></p>
                 
+            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
+        </form>
+    </div>
+
+    <div id="myGameModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
+        <button id="closeGameModal" class="back-btn"><img src="/static/images/arrow-icon.png"></button>
+        
+        <form action="/removeSteam" method="POST">
+            <input type="hidden" id="hiddenId" name="id">
+    
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageGameDisplay">
+            <h2 style="font-weight: bold;" class="modal-title" id="titleGameDisplay"></h2>
+            <p class="modal-price" id="salePriceDisplay"></p>
+            <p class="modal-normal" id="normalPriceDisplay"></p>
+            <p class="modal-steamid" id="steamIDDisplay"></p>
+    
             <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
         </form>
     </div>

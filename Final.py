@@ -54,7 +54,45 @@ def sortSteam():
 
     deals = fetch_sale_games()
 
-    return render_template('steam.html', saleList=deals, pfp=pfps)
+    return render_template('steam.html', saleList=deals, pfp=pfp)
+
+
+@app.route('/addSteam', methods=['POST'])
+def favoriteGame():
+    image = request.form['thumb']
+    name = request.form['title']
+    salePrice = request.form['salePrice']
+    normalPrice = request.form['normalPrice']
+    deal_id = request.form['dealID']
+    steam_id = request.form['steamAppID']
+
+    new_favorite = Steam(
+        user_id=session['user']['id'],
+        image=image,
+        gamename=name,
+        saleprice=salePrice,
+        regularprice=normalPrice,
+        deal_id=deal_id,
+        steam_id=steam_id
+
+    )
+
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return jsonify({'success': True})
+
+
+@app.route('/removeSteam', methods=['POST'])
+def deleteGame():
+    id = request.form['id']
+    favorite = Steam.query.filter_by(game_id=id).first()
+
+    if favorite:
+        db.session.delete(favorite)
+        db.session.commit()
+
+    return redirect('/account')
 
 # fortnite page (lists skins)
 # maybe categorize between pickaxes or skins
@@ -89,7 +127,6 @@ def sortFortnite():
     
     user = session.get('user')
     pfp = user.get('pfp')
-    username = user.get('username')
 
     type = request.form['type']
     rarity = request.form['rarity']
@@ -172,8 +209,9 @@ def account():
 
     user = session.get('user')
     favoriteCosmetics = Favorite.query.filter_by(user_id=user.get('id')).all()
+    favoriteGames = Steam.query.filter_by(user_id=user.get('id')).all()
     
-    return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, is_fortnite=is_fortnite)
+    return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, favoriteGames=favoriteGames, is_fortnite=is_fortnite)
 
 @app.route('/emailUser', methods=['POST'])
 def emailAvailability():
@@ -286,6 +324,17 @@ class Favorite(db.Model):
     image = db.Column(db.String(120), unique=True, nullable=False)
     introduced = db.Column(db.String(120), nullable=False)
 
+class Steam(db.Model):
+    __tablename__ = 'steam'
+    game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    image = db.Column(db.String(120), unique=True, nullable=False)
+    gamename = db.Column(db.String(100), nullable=False)
+    saleprice = db.Column(db.String(100), nullable=False)
+    regularprice = db.Column(db.String(80), nullable=False)
+    deal_id = db.Column(db.String(255), nullable=False)
+    steam_id = db.Column(db.String(255), nullable=False)
+
 
 def fetch_cosmetic(type, rarity, search):
     r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
@@ -319,7 +368,7 @@ def fetch_game_title(query):
     return None, None
 
 def fetch_steamid_deal(steamID):
-    r = requests.get(f'https://www.cheapshark.com/api/1.0/games?steamAppID={steam_appid}')
+    r = requests.get(f'https://www.cheapshark.com/api/1.0/games?steamAppID={steamID}')
 
     return r.json()
 

@@ -1,6 +1,5 @@
 -- Schema: public (default in Supabase)
 
-
 -- Create User table
 CREATE TABLE IF NOT EXISTS "user" (
   user_id SERIAL PRIMARY KEY,
@@ -12,17 +11,28 @@ CREATE TABLE IF NOT EXISTS "user" (
   profilePicture VARCHAR(256)
 );
 
--- Create Skin table
-CREATE TABLE IF NOT EXISTS skin (
+CREATE TABLE IF NOT EXISTS favorite (
   skin_id SERIAL PRIMARY KEY,
-  skin_name VARCHAR(64)
+  user_id INT NOT NULL,
+  image VARCHAR(256),
+  skinName VARCHAR(64),
+  description VARCHAR(256),
+  type VARCHAR(32),
+  series VARCHAR(64),
+  rarity VARCHAR(16),
+  set VARCHAR(64),
+  introduced VARCHAR(64),
+  FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
--- Create User_Favorite_Skin junction table
-CREATE TABLE IF NOT EXISTS user_favorite_skin (
+CREATE TABLE IF NOT EXISTS steam (
+  game_id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
-  skin_id INT NOT NULL,
-  PRIMARY KEY (user_id, skin_id),
-  FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  FOREIGN KEY (skin_id) REFERENCES skin (skin_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  image VARCHAR(256),
+  gameName VARCHAR(64),
+  salePrice VARCHAR(32),
+  regularPrice VARCHAR(32),
+  deal_id VARCHAR(32),
+  steam_id VARCHAR(64),
+  FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );

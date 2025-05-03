@@ -1,6 +1,7 @@
 document.querySelector('#ShowFortnite').addEventListener('click', OpenFortnite);
 document.querySelector('#ShowSteam').addEventListener('click', OpenSteam);
 document.querySelector('#closeModal').addEventListener('click', closeModal);
+document.querySelector('#closeGameModal').addEventListener('click', closeModal);
 var modal;
 
 var is_fortnite = document.getElementById("hiddenTab").value === "1";
@@ -74,6 +75,30 @@ function openModal(cardElement) {
     modal.querySelector(".modal-introduction").textContent = id;
 
     modal.querySelector("input[name='id']").value = id;
+
+    modal.style.display = "block";
+}
+
+function openGameModal(cardElement) {
+    const imgElement = cardElement.querySelector('img');
+
+    const title = imgElement.dataset.title;
+    const salePrice = imgElement.dataset.saleprice;
+    const normalPrice = imgElement.dataset.normalprice;
+    const thumb = imgElement.dataset.thumb;
+    const steamAppID = imgElement.dataset.steamid;
+    const id = imgElement.dataset.id;
+
+    modal = document.getElementById("myGameModal");
+
+    modal.querySelector(".modal-image").src = thumb;
+    modal.querySelector(".modal-title").textContent = title;
+    modal.querySelector(".modal-price").textContent = `Sale Price: $${salePrice}`;
+    modal.querySelector(".modal-normal").textContent = `Normal Price: $${normalPrice}`;
+    modal.querySelector(".modal-steamid").textContent = `Steam App ID: ${steamAppID}`;
+
+
+    modal.querySelector("input[name='id']").value = id;    
 
     modal.style.display = "block";
 }
