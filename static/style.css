@@ -349,3 +349,10 @@ select {
     background-color: #218838;
     transform: scale(1.08);
 }
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }

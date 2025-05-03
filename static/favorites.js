@@ -8,6 +8,7 @@ var is_fortnite = document.getElementById("hiddenTab").value === "1";
 if(is_fortnite){
     document.getElementById("Steam").style.display = "none";
     document.getElementById("Fortnite").style.display = "flex";
+    document.getElementById("emailButton").style.display = "block";
 
     document.getElementById("ShowSteam").classList.remove("chosen-btn");
     document.getElementById("ShowSteam").classList.add("not-chosen-btn");
@@ -17,6 +18,7 @@ if(is_fortnite){
 } else {
     document.getElementById("Fortnite").style.display = "none";
     document.getElementById("Steam").style.display = "flex";
+    document.getElementById("emailButton").style.display = "none";
 
     document.getElementById("ShowFortnite").classList.remove("chosen-btn");
     document.getElementById("ShowFortnite").classList.add("not-chosen-btn");
@@ -29,6 +31,7 @@ if(is_fortnite){
 function OpenFortnite(){
     document.getElementById("Steam").style.display = "none";
     document.getElementById("Fortnite").style.display = "flex";
+    document.getElementById("emailButton").style.display = "block";
 
     document.getElementById("ShowSteam").classList.remove("chosen-btn");
     document.getElementById("ShowSteam").classList.add("not-chosen-btn");
@@ -41,6 +44,7 @@ function OpenFortnite(){
 function OpenSteam(){
     document.getElementById("Fortnite").style.display = "none";
     document.getElementById("Steam").style.display = "flex";
+    document.getElementById("emailButton").style.display = "none";
     
     document.getElementById("ShowFortnite").classList.remove("chosen-btn");
     document.getElementById("ShowFortnite").classList.add("not-chosen-btn");

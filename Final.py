@@ -39,13 +39,23 @@ def steam():
     user = session.get('user')
     pfp = user.get('pfp')
 
+    page = int(request.args.get('page', 1))
+    per_page = 54
+
     deals = fetch_free_games(None, None, None, None)
+
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_games = deals[start:end]
+
+    has_next = len(deals) > end
+    has_prev = page > 1
 
     genres = sorted(set(game['genre'] for game in deals))
     platforms = sorted(set(game['platform'] for game in deals))
     publishers = sorted(set(game['publisher'] for game in deals))
 
-    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers)
+    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
 #use the fetch_game_title(query) 
 @app.route('/sortSteam', methods=['POST'])

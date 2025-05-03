@@ -114,6 +114,25 @@
         </form>
     </div>
 
+    <div class="pagination">
+        {% if has_prev %}
+        <a href="{% if request.endpoint == 'sortSteam' %}
+             {{ url_for('sortSteam', page=page - 1, genre=genre, publisher=publisher, plaform=platform, search=search) }}
+         {% else %}
+             {{ url_for('steam', page=page - 1) }}
+         {% endif %}"
+        class="page-button">Previous</a>
+        {% endif %}
+        {% if has_next %}
+        <a href="{% if request.endpoint == 'sortSteam' %}
+             {{ url_for('sortSteam', page=page + 1, genre=genre, publisher=publisher, plaform=platform, search=search) }}
+         {% else %}
+             {{ url_for('steam', page=page + 1) }}
+         {% endif %}"
+        class="page-button">Next</a> 
+        {% endif %}
+    </div>
+
     <script src="{{ url_for('static', filename='game.js') }}"></script>
 </body>
 </html>
