@@ -41,7 +41,7 @@ function addFavorite(event) {
     const form = event.target;
     const formData = new FormData(form);
 
-    fetch('/addFavorite', {
+    fetch('/addSteam', {
         method: 'POST',
         body: formData
     }).then(response => {
