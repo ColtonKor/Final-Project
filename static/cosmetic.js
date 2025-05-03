@@ -1,3 +1,4 @@
+document.querySelector('#addFavoriteForm').addEventListener('submit', addFavorite)
 document.querySelector('#closeModal').addEventListener('click', closeModal);
 var modal;
 
@@ -38,4 +39,20 @@ function openModal(cardElement) {
 
 function closeModal(){
     modal.style.display='none';
+}
+
+function addFavorite(event){
+    event.preventDefault();
+
+    var form = event.target;
+    var formData = new FormData(form);
+
+    fetch('/addFavorite', {
+        method: 'POST',
+        body: formData
+    }).then(function(response) {
+        if (response.ok) {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    });
 }
