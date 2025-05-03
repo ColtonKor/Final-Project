@@ -3,25 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite</title>
+    <title>Steam Games</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
     <nav class="navigation">
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
-        <a href="{{ url_for('account') }}?currentTab=2" class="nav-item"> <img src="/static/images/default-pfp.png"> </a>
+        <a href="{{ url_for('account') }}?currentTab=2" class="nav-item"> <img src="{{ pfp }}" style="width: 2rem; height: auto;"> </a>
     </nav>
 
     <h1 class="header">STEAM</h1>
 
     <input type="hidden" name="currentTab" value="2">
 
-    <div class="search-container">
-        <input type="text" placeholder="Search games..." class="search-input" id="searchInput">
-        <img src="/static/images/search-icon.png">
+    <div class="cosmetic-container">
+    <h1 style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">Recently on Sale</h1>
+    <div class="fortnite-card-container">
+        {% for game in saleList %}
+        <div class="fortnite-card" onclick="openModal(this)">
+            <img
+                style="border-radius: 1rem"
+                src="{{ game.thumb }}"
+                alt="{{ game.title }}"
+                width="256px" 
+                height="auto"
+                data-title="{{ game.title }}"
+                data-thumb="{{ game.thumb }}"
+                data-saleprice="{{ game.salePrice }}"
+                data-normalprice="{{ game.normalPrice }}"
+                data-steamid="{{ game.steamAppID }}"
+            >
+            <p>{{ game.title }}</p>
+        </div>
+        {% endfor %}
+    </div>
     </div>
 
-</body>
+    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
+        <button id="closeModal" class="back-btn"><img src="/static/images/arrow-icon.png"></button>
+        
+        <form id="addFavoriteForm">
+            <input type="hidden" id="hiddenThumb" name="thumb">
+            <input type="hidden" id="hiddenTitle" name="title">
+            <input type="hidden" id="hiddenSalePrice" name="salePrice">
+            <input type="hidden" id="hiddenNormalPrice" name="normalPrice">
+            <input type="hidden" id="hiddenDealID" name="dealID">
+            <input type="hidden" id="hiddenSteamAppID" name="steamAppID">
+    
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
+            <h2 style="font-weight: bold;" class="modal-title" id="titleDisplay"></h2>
+            <p class="modal-price" id="salePriceDisplay"></p>
+            <p class="modal-normal" id="normalPriceDisplay"></p>
+            <p class="modal-steamid" id="steamIDDisplay"></p>
+    
+            <button type="submit" class="add-btn"><img src="/static/images/add-icon.png"></button>
+        </form>
+    </div>
 
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
 </html>
