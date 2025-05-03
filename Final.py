@@ -55,7 +55,7 @@ def steam():
     platforms = sorted(set(game['platform'] for game in deals))
     publishers = sorted(set(game['publisher'] for game in deals))
 
-    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
+    return render_template('steam.html', games=paginated_games, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
 #use the fetch_game_title(query) 
 @app.route('/sortSteam', methods=['POST'])
@@ -71,7 +71,17 @@ def sortSteam():
     platform = request.form['platform']
     search = request.form['search']
 
+    page = int(request.args.get('page', 1))
+    per_page = 54
+
     deals = fetch_free_games(genre, publisher, platform, search)
+
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_games = deals[start:end]
+
+    has_next = len(deals) > end
+    has_prev = page > 1
 
 
     regular = fetch_free_games(None, None, None, None)
@@ -80,7 +90,7 @@ def sortSteam():
     platforms = sorted(set(game['platform'] for game in regular))
     publishers = sorted(set(game['publisher'] for game in regular))
 
-    return render_template('steam.html', games=deals, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers)
+    return render_template('steam.html', games=paginated_games, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
 
 @app.route('/addSteam', methods=['POST'])
