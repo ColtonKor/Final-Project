@@ -257,7 +257,6 @@ def create_account():
 @app.route('/account')
 def account():
     current_tab = request.args.get('currentTab')
-
     is_fortnite = (current_tab == '1')
 
     user = session.get('user')

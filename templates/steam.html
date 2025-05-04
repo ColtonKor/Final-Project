@@ -87,10 +87,21 @@
         </div>
     </div>
 
-    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button id="closeModal" class="back-btn"><img src="/static/images/arrow-icon.png"></button>
-        
+    <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">        
         <form id="addFavoriteForm">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0.5rem;">
+                <button type="button" class="back-btn" id="closeModal">
+                    <img src="/static/images/arrow-icon.png" alt="Back">
+                </button>
+                <button type="submit" class="add-btn">
+                    <img src="/static/images/add-icon.png">
+                </button>
+            </div>
+
+            <br><br><br>
+            <hr>
+            <br>
+
             <input type="hidden" id="hiddenThumb" name="thumb">
             <input type="hidden" id="hiddenTitle" name="title">
             <input type="hidden" id="hiddenGenre" name="genre">
@@ -109,8 +120,6 @@
             <p class="modal-publisher" id="publisherDisplay"></p>
             <p class="modal-developer" id="developerDisplay"></p>
             <p class="modal-release" id="releaseDisplay"></p>
-    
-            <button type="submit" class="add-btn"><img src="/static/images/add-icon.png"></button>
         </form>
     </div>
 

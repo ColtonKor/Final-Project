@@ -25,10 +25,10 @@
     
     
     <div style="display: flex; justify-content: center; padding-top: 4rem;">
-        <button type="submit" name="type" value="steam" id="ShowSteam">
+        <button type="submit" name="type" value="steam" id="ShowSteam" onclick="switchTab(2);">
             STEAM
         </button>
-        <button type="submit" name="type" value="fortnite" id="ShowFortnite">
+        <button type="submit" name="type" value="fortnite" id="ShowFortnite" onclick="switchTab(1);">
             FORTNITE
         </button> 
     </div>
@@ -123,14 +123,23 @@
 
 
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/removeFavorite" method="POST">
-            <!-- Hidden fields to be filled by JS -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0.5rem;">
+                <button type="button" class="back-btn" id="closeModal">
+                    <img src="/static/images/arrow-icon.png" alt="Back">
+                </button>
+                <button class="remove-btn">
+                    <img src="/static/images/remove-icon.png" alt="Delete">
+                </button>
+            </div>
+
+            <br><br><br>
+            <hr>
+            <br>
+    
             <input type="hidden" id="hiddenId" name="id">
-            
-                
-            <!-- What the user sees -->
-            <img class="modal-image" src="" alt="" style="max-width: 128px; max-height: auto; border-radius: 1rem;" id="imageDisplay">
+    
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
             <h2 style="font-weight: bold;" class="modal-title" id="nameDisplay"></h2>
             <p class="modal-description" id="descriptionDisplay"></p>
             <p class="modal-type" id="typeDisplay"></p>
@@ -138,15 +147,24 @@
             <p class="modal-series" id="seriesDisplay"></p>
             <p class="modal-set" id="setDisplay"></p>
             <p class="modal-introduction" id="introductionDisplay"></p>
-                
-            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
         </form>
     </div>
 
-    <div id="myGameModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button id="closeGameModal" class="back-btn"><img src="/static/images/arrow-icon.png"></button>
-        
+    <div id="myGameModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">        
         <form action="/removeSteam" method="POST">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0.5rem;">
+                <button type="button" class="back-btn" id="closeGameModal">
+                    <img src="/static/images/arrow-icon.png" alt="Back">
+                </button>
+                <button class="remove-btn">
+                    <img src="/static/images/remove-icon.png" alt="Delete">
+                </button>
+            </div>
+
+            <br><br><br>
+            <hr>
+            <br>
+
             <input type="hidden" id="hiddenId" name="id">
     
             <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
@@ -157,10 +175,6 @@
             <p id="publisherDisplay"></p>
             <p id="developerDisplay"></p>
             <p id="releaseDisplay"></p>
-    
-            <button class="remove-btn">
-                <img src="/static/images/remove-icon.png">
-            </button>
         </form>
     </div>
 

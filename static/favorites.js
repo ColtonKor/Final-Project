@@ -38,6 +38,8 @@ function OpenFortnite(){
 
     document.getElementById("ShowFortnite").classList.remove("not-chosen-btn");
     document.getElementById("ShowFortnite").classList.add("chosen-btn");
+
+    document.getElementById("hiddenTab").value = 1;
 }
 
 
@@ -51,6 +53,8 @@ function OpenSteam(){
 
     document.getElementById("ShowSteam").classList.remove("not-chosen-btn");
     document.getElementById("ShowSteam").classList.add("chosen-btn");
+
+    document.getElementById("hiddenTab").value = 2;
 }
 
 
@@ -114,4 +118,10 @@ function openGameModal(cardElement) {
 
 function closeModal(){
     modal.style.display='none';
+}
+
+function switchTab(tabIndex) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('currentTab', tabIndex);
+    window.history.replaceState(null, '', url);
 }
