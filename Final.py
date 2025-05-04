@@ -58,7 +58,7 @@ def steam():
     return render_template('steam.html', games=paginated_games, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
 #use the fetch_game_title(query) 
-@app.route('/sortSteam', methods=['POST'])
+@app.route('/sortSteam', methods=['GET', 'POST'])
 def sortSteam():
     if not session.get('authenticated'):
         return redirect('/')
@@ -66,10 +66,16 @@ def sortSteam():
     user = session.get('user')
     pfp = user.get('pfp')
 
-    genre = request.form['genre']
-    publisher = request.form['publisher']
-    platform = request.form['platform']
-    search = request.form['search']
+    if request.method == 'POST':
+        genre = request.form['genre']
+        publisher = request.form['publisher']
+        platform = request.form['platform']
+        search = request.form['search']
+    else:
+        genre = request.args.get('genre', '')
+        publisher = request.args.get('publisher', '')
+        platform = request.args.get('platform', '')
+        search = request.args.get('search', '')
 
     page = int(request.args.get('page', 1))
     per_page = 54
@@ -161,7 +167,7 @@ def fortnite():
     return render_template('fortnite.html', list=paginated_cosmetics, page=page, has_next=has_next, has_prev=has_prev, pfp=pfp)
 
 
-@app.route('/sortFortnite', methods=['POST'])
+@app.route('/sortFortnite', methods=['GET', 'POST'])
 def sortFortnite():
     if not session.get('authenticated'):
         return redirect('/')
@@ -169,9 +175,15 @@ def sortFortnite():
     user = session.get('user')
     pfp = user.get('pfp')
 
-    type = request.form['type']
-    rarity = request.form['rarity']
-    search = request.form['search']
+    if request.method == 'POST':
+        type = request.form['type']
+        rarity = request.form['rarity']
+        search = request.form['search']
+    else:
+        type = request.args.get('type', '')
+        rarity = request.args.get('rarity', '')
+        search = request.args.get('search', '')
+    
     cosmetics = fetch_cosmetic(type, rarity, search)
     #pages
     page = int(request.args.get('page', 1))
