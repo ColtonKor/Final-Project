@@ -372,12 +372,15 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     profilepicture = db.Column(db.String(255))
     email = db.Column(db.String(120), unique=True, nullable=False)
+    favorites = db.relationship('Favorite', backref='user', cascade='all, delete', passive_deletes=True)
+    steams = db.relationship('Steam', backref='user', cascade='all, delete', passive_deletes=True)
+    frees = db.relationship('Free', backref='user', cascade='all, delete', passive_deletes=True)
 
 
 class Favorite(db.Model):
     __tablename__ = 'favorite'
     skin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     skinname = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     series = db.Column(db.String(80), nullable=False)
@@ -390,7 +393,7 @@ class Favorite(db.Model):
 class Steam(db.Model):
     __tablename__ = 'steam'
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     image = db.Column(db.String(120), unique=True, nullable=False)
     gamename = db.Column(db.String(100), nullable=False)
     saleprice = db.Column(db.String(100), nullable=False)
@@ -401,7 +404,7 @@ class Steam(db.Model):
 class Free(db.Model):
     __tablename__ = 'free'
     game_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     thumbnail = db.Column(db.String(256), nullable=False)
     genre = db.Column(db.String(64), nullable=True)
