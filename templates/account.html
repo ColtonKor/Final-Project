@@ -10,6 +10,7 @@
 <body>
     <nav class="navigation">
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
+        <a href="{{ url_for('deleteAccount') }}" class="nav-item"> <img src="/static/images/Delete.png" style="width: 2rem; height: auto;"> </a>
         <a href="{{ url_for('logout') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
     <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ '1' if is_fortnite else '0' }}">

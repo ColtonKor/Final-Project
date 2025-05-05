@@ -303,6 +303,16 @@ def welcome():
     
     return render_template('home.html')
 
+@app.route('/delete')
+def deleteAccount():
+    account = User.query.filter_by(user_id=session['user']['id']).first()
+
+    if account:
+        db.session.delete(account)
+        db.session.commit()
+
+    session.clear()
+    return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login_post():
