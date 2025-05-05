@@ -139,7 +139,7 @@ def deleteGame():
         db.session.delete(favorite)
         db.session.commit()
 
-    return redirect('/account')
+    return redirect(f'/account?currentTab={2}')
 
 # fortnite page (lists skins)
 # maybe categorize between pickaxes or skins
@@ -237,7 +237,7 @@ def deleteCosmetic():
         db.session.delete(favorite)
         db.session.commit()
 
-    return redirect('/account')
+    return redirect(f'/account?currentTab={1}')
 
 
 # Start of the Login Portion of the Code
@@ -293,7 +293,7 @@ def emailAvailability():
     if(email_body):
         mail.send(msg)
    
-    return redirect('/account')
+    return redirect(f'/account?currentTab={1}')
 
 
 @app.route('/welcome')
