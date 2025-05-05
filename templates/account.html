@@ -10,6 +10,7 @@
 <body>
     <nav class="navigation">
         <a href="{{ url_for('welcome') }}" class="nav-item"> <img src="/static/images/home-icon.png"> </a>
+        <a href="{{ url_for('deleteAccount') }}" class="nav-item"> <img src="/static/images/Delete.png" style="width: 2rem; height: auto;"> </a>
         <a href="{{ url_for('logout') }}" class="nav-item"> <img src="{{ user.get('pfp') }}" style="width: 2rem; height: auto;"> </a>
     </nav>
     <input type="hidden" id="hiddenTab" name="hiddenTab" value="{{ '1' if is_fortnite else '0' }}">
@@ -18,22 +19,26 @@
         <h1 class="profile-text" style="font-size: 4rem;">
             {{user.get('username')}}
             <br>
-            <p style="font-size: large;">Games: Skins: {{ favoriteCosmetics|length }} </p>
+            <p style="font-size: large;">Games: {{ favoriteGames|length }} Skins: {{ favoriteCosmetics|length }} </p>
         </h1>
     </div>
 
-    <form action="/emailUser" method="POST">
-        <button>Email Availability</button>
-    </form>
+    
     
     <div style="display: flex; justify-content: center; padding-top: 4rem;">
-        <button type="submit" name="type" value="steam" id="ShowSteam">
+        <button type="submit" name="type" value="steam" id="ShowSteam" onclick="switchTab(2);">
             STEAM
         </button>
-        <button type="submit" name="type" value="fortnite" id="ShowFortnite">
+        <button type="submit" name="type" value="fortnite" id="ShowFortnite" onclick="switchTab(1);">
             FORTNITE
         </button> 
     </div>
+
+    <form action="/emailUser" method="POST">
+        <div class="center-container">
+            <button class="play-button" id="emailButton">Email Availability</button>
+        </div>
+    </form>
     
     <div style="display: flex; justify-content: center; padding-top: 4rem;">
         <div style="display: flex; flex-wrap: wrap;" class="fortnite-card-container" id="Fortnite">
@@ -79,21 +84,33 @@
             <div class="fortnite-card-container">
                 {% if favoriteGames %}
                     {% for game in favoriteGames %}
-                        <div class="fortnite-card" onclick="openGameModal(this)">
-                            <img
-                                style="border-radius: 1rem"
-                                src="{{ game.image }}"
-                                alt="{{ game.gamename }}"
-                                width="256px" 
-                                height="auto"
-                                data-title="{{ game.gamename }}"
-                                data-thumb="{{ game.image }}"
-                                data-saleprice="{{ game.saleprice }}"
-                                data-normalprice="{{ game.regularprice }}"
-                                data-steamid="{{ game.steam_id }}"
-                                data-id="{{ game.game_id }}"
-                            >
-                            <p>{{ game.title }}</p>
+                        <div class="fortnite-card-wrapper">
+                            <div class="fortnite-card" onclick="openGameModal(this)">
+                                <img
+                                    style="border-radius: 1rem"
+                                    src="{{ game.thumbnail }}"
+                                    alt="{{ game.title }}"
+                                    width="256px" 
+                                    height="auto"
+                                    data-title="{{ game.title }}"
+                                    data-thumb="{{ game.thumbnail }}"
+                                    data-genre="{{ game.genre }}"
+                                    data-description="{{ game.short_description }}"
+                                    data-platform="{{ game.platform }}"
+                                    data-publisher="{{ game.publisher }}"
+                                    data-developer="{{ game.developer }}"
+                                    data-release="{{ game.release_date }}"
+                                    data-url="{{ game.url }}"
+                                    data-id="{{ game.game_id }}"
+                                >
+                                <p>{{ game.title }}</p>
+                            </div>
+                            <br>
+                            <a href="{{ game.url }}" target="_blank">
+                                <button class="play-button">
+                                    Play Game Now
+                                </button>
+                            </a>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -107,14 +124,23 @@
 
 
     <div id="myModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button class="back-btn" id="closeModal"><img src="/static/images/arrow-icon.png"></button>
         <form action="/removeFavorite" method="POST">
-            <!-- Hidden fields to be filled by JS -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0.5rem;">
+                <button type="button" class="back-btn" id="closeModal">
+                    <img src="/static/images/arrow-icon.png" alt="Back">
+                </button>
+                <button class="remove-btn">
+                    <img src="/static/images/remove-icon.png" alt="Delete">
+                </button>
+            </div>
+
+            <br><br><br>
+            <hr>
+            <br>
+    
             <input type="hidden" id="hiddenId" name="id">
-            
-                
-            <!-- What the user sees -->
-            <img class="modal-image" src="" alt="" style="max-width: 128px; max-height: auto; border-radius: 1rem;" id="imageDisplay">
+    
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
             <h2 style="font-weight: bold;" class="modal-title" id="nameDisplay"></h2>
             <p class="modal-description" id="descriptionDisplay"></p>
             <p class="modal-type" id="typeDisplay"></p>
@@ -122,24 +148,34 @@
             <p class="modal-series" id="seriesDisplay"></p>
             <p class="modal-set" id="setDisplay"></p>
             <p class="modal-introduction" id="introductionDisplay"></p>
-                
-            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
         </form>
     </div>
 
-    <div id="myGameModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">
-        <button id="closeGameModal" class="back-btn"><img src="/static/images/arrow-icon.png"></button>
-        
+    <div id="myGameModal" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -20%); min-width: 200px;" class="fortnite-info">        
         <form action="/removeSteam" method="POST">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0.5rem;">
+                <button type="button" class="back-btn" id="closeGameModal">
+                    <img src="/static/images/arrow-icon.png" alt="Back">
+                </button>
+                <button class="remove-btn">
+                    <img src="/static/images/remove-icon.png" alt="Delete">
+                </button>
+            </div>
+
+            <br><br><br>
+            <hr>
+            <br>
+
             <input type="hidden" id="hiddenId" name="id">
     
-            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageGameDisplay">
-            <h2 style="font-weight: bold;" class="modal-title" id="titleGameDisplay"></h2>
-            <p class="modal-price" id="salePriceDisplay"></p>
-            <p class="modal-normal" id="normalPriceDisplay"></p>
-            <p class="modal-steamid" id="steamIDDisplay"></p>
-    
-            <button class="remove-btn"><img src="/static/images/remove-icon.png"></button>
+            <img class="modal-image" src="" alt="" style="max-width: 128px; border-radius: 1rem;" id="imageDisplay">
+            <h2 style="font-weight: bold;" class="modal-title" id="titleDisplay"></h2>
+            <p id="descriptionDisplay"></p>
+            <p id="genreDisplay"></p>
+            <p id="platformDisplay"></p>
+            <p id="publisherDisplay"></p>
+            <p id="developerDisplay"></p>
+            <p id="releaseDisplay"></p>
         </form>
     </div>
 

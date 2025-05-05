@@ -23,7 +23,7 @@ function openModal(cardElement) {
     modal.querySelector(".modal-rarity").textContent = rarity;
     modal.querySelector(".modal-series").textContent = series;
     modal.querySelector(".modal-set").textContent = set;
-    modal.querySelector(".modal-introduction").textContent = introduction;
+    modal.querySelector(".modal-introduction").textContent = `Release Date: ${introduction}`;
 
     modal.querySelector("input[name='image']").value = image;
     modal.querySelector("input[name='name']").value = name;
