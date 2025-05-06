@@ -6,6 +6,12 @@
     <title>Welcome Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<header class="title-container">
+  <h1 class="title">GameTracker</h1>
+  <h2 class="welcome-message">Welcome back, {{ username }}!</h2>
+  <p> Select a platform to get started </p>
+
+</header>
 
 <body class="no-scrolling" style="overflow: hidden;">
     <div class="image-split">
