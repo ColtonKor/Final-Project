@@ -12,7 +12,7 @@
         <a href="{{ url_for('account') }}?currentTab=2" class="nav-item"> <img src="{{ pfp }}" style="width: 2rem; height: auto;"> </a>
     </nav>
 
-    <h1 class="header">STEAM</h1>
+    <h1 class="header">FREE GAMES</h1>
 
     <input type="hidden" name="currentTab" value="2">
 
@@ -23,7 +23,7 @@
         </div>
 
         <div style="display: flex;">
-            <h1 style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0;">Games</h1>
+            <h1 style="color: var(--main-text); text-shadow: 0 8px 16px rgba(0,0,0,0.3); bottom: 0; margin-left: 6rem;">Games</h1>
             <select id="genre" name="genre" class="filter-btn" style="background: var(--secondary-background); border: none; color: var(--main-text); font-size: small; font-weight: bold;">
                 <option value="">Genre</option>
                 {% for genre in genres %}
