@@ -248,7 +248,10 @@ def emailAvailability():
 def welcome():
     if not session.get('authenticated'):
         return redirect('/')
-    return render_template('home.html')
+    
+    user = session.get('user')
+    username = user.get('username', 'Guest')
+    return render_template('home.html', username=username)
 
 
 @app.route('/login', methods=['POST'])

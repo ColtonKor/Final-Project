@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
+<body class="no-scrolling">
+  <header class="title-container">
+      <h1 class="title">Welcome back {{ username }}!</h1>
+      <h2 class="subtitle">Select a platform to get started</h2>
+  </header>
+
 <body class="no-scrolling" style="overflow: hidden;">
     <div class="image-split">
         <a href="{{ url_for('steam') }}">
