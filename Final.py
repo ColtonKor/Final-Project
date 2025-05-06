@@ -301,9 +301,7 @@ def welcome():
     if not session.get('authenticated'):
         return redirect('/')
     
-    user = session.get('user')
-    username = user.get('username', 'Guest')
-    return render_template('home.html', username=username)
+    return render_template('home.html', username=session['user']['username'])
 
 @app.route('/delete')
 def deleteAccount():
