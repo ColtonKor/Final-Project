@@ -300,10 +300,6 @@ def emailAvailability():
 def welcome():
     if not session.get('authenticated'):
         return redirect('/')
-<<<<<<< Updated upstream
-    
-=======
->>>>>>> Stashed changes
     return render_template('home.html')
 
 @app.route('/delete')
