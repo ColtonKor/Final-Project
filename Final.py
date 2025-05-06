@@ -301,7 +301,7 @@ def welcome():
     if not session.get('authenticated'):
         return redirect('/')
     
-    return render_template('home.html', username=session['user']['username'])
+    return render_template('home.html', username=session['user']['firstName'])
 
 @app.route('/delete')
 def deleteAccount():
@@ -330,7 +330,7 @@ def login_post():
             'email' : user.email,
             'pfp': user.profilepicture
         }
-        return render_template('home.html')
+        return render_template('home.html', username=session['user']['firstName'])
     return redirect('/')
 
 
