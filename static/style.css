@@ -355,4 +355,38 @@ select {
     justify-content: center;
     align-items: center;
     height: 100%;
+<<<<<<< Updated upstream
+=======
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.split-link:hover img {
+    transform: scale(1.05);
+}
+
+
+.play-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.play-button:hover {
+    background-color: #218838;
+    transform: scale(1.08);
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+>>>>>>> Stashed changes
   }
