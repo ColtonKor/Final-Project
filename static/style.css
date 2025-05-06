@@ -230,14 +230,12 @@ select {
 
     padding: 8px;
     background: var(--background);
-    border-bottom-color: var(--secondary);
 }
 
 .add-btn {
     border: none;
     border-radius: 50%;
 
-    margin-top: 1rem;
     padding: 8px;
     background: var(--secondary);
 }
@@ -246,7 +244,6 @@ select {
     border: none;
     border-radius: 50%;
 
-    margin-top: 1rem;
     padding: 8px;
     background: #FF746C;
 }

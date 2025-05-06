@@ -474,44 +474,6 @@ def fetch_free_games(genre, publisher, platform, search):
 
     return filtered_games
 
-# Steam Store Games
-def fetch_game_title(query):
-    r = requests.get('https://api.steampowered.com/ISteamApps/GetAppList/v2/')
-    games = r.json()["applist"]["apps"]
-
-    for game in games:
-        if query.lower() in game["name"].lower():
-            return game["appid"], game["name"]
-    return None, None
-
-def fetch_steamid_deal(steamID):
-    r = requests.get(f'https://www.cheapshark.com/api/1.0/games?steamAppID={steamID}')
-
-    return r.json()
-
-def search_game(query):
-    steam_id, title = fetch_game_title(query)
-    if not steam_id:
-        return f"No Steam game found for: {query}"
-
-    print(f"Found '{title}' on Steam (appid: {steam_id})")
-
-    deal_info = fetch_steamid_deal(steam_id)
-    if deal_info:
-        return deal_info #thumbnail, title, steamid, original price, sale price
-    else:
-        return f"No CheapShark deal found for: {title}"
-
-def fetch_sale_games():
-    r = requests.get("https://www.cheapshark.com/api/1.0/deals", params={
-        "storeID": "1",
-        "pageSize": 5,
-        "sortBy": "recent"
-    })
-
-    return r.json()
-
-
 
 def normalize_genre(genre_str):
     # Normalize genres to lowercase and split by common separators
