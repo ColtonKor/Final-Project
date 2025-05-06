@@ -300,10 +300,9 @@ def emailAvailability():
 def welcome():
     if not session.get('authenticated'):
         return redirect('/')
-    user = session.get('user')
-    username = user.get('username')
-
     
+    user = session.get('user')
+    username = user.get('username', 'Guest')
     return render_template('home.html', username=username)
 
 @app.route('/delete')
