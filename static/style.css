@@ -352,8 +352,6 @@ select {
     justify-content: center;
     align-items: center;
     height: 100%;
-<<<<<<< Updated upstream
-=======
     object-fit: cover;
     transition: transform 0.3s ease;
 }
@@ -385,7 +383,6 @@ select {
     justify-content: center;
     align-items: center;
     height: 100%;
->>>>>>> Stashed changes
   }
 
   body.no-scrolling {
@@ -398,7 +395,7 @@ select {
     width: 100%;
     padding: 20px;
     text-align: center;
-    background-color: #222; /* dark background */
+    background-color: var(--secondary-background); /* dark background */
     color: white; /* white text */
 }
 
