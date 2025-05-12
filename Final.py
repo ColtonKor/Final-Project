@@ -1,3 +1,11 @@
+#Course: CST 205 Multimedia Spring 2025
+#Title: GameTrackr
+#Authors: Colton Korhummel, Anthony Duenez Ramirez, and Jourdan Garnier
+#Date: 5-7-25
+#Abstract: This flask app allows us to see 2 different API's. One API is for fortnite, You can favorite any cosmetics and press a button to check
+#if any of your favorited cosmetics is in the shop and it will email you if it is. You can favorite the games and each one has a button to send you
+#to a website to play the game. You filter the api's so you don't get everyone. You also can click on it to have a popup with it's information from the API.
+
 from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
@@ -30,7 +38,7 @@ app.config['SECRET_KEY'] = 'csumb-otter'
 bootstrap = Bootstrap5(app)
 mail = Mail(app)
 
-
+#This route opens the Free Game page so we can favorite them. It also has pages so all of the information is not on the one long page.
 @app.route('/steam')
 def steam():
     if not session.get('authenticated'):
@@ -57,7 +65,7 @@ def steam():
 
     return render_template('steam.html', games=paginated_games, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
-#use the fetch_game_title(query) 
+#This route does the same thing as the one before but it uses both Get and Post so the pages keep the filtering
 @app.route('/sortSteam', methods=['GET', 'POST'])
 def sortSteam():
     if not session.get('authenticated'):
@@ -98,7 +106,7 @@ def sortSteam():
 
     return render_template('steam.html', games=paginated_games, pfp=pfp, genres=genres, platforms=platforms, publishers=publishers, page=page, has_next=has_next, has_prev=has_prev)
 
-
+#This function adds the games to the database. It takes all the information from the free game and inserts that to the table.
 @app.route('/addSteam', methods=['POST'])
 def favoriteGame():
     title = request.form['title']
@@ -129,7 +137,7 @@ def favoriteGame():
 
     return jsonify({'success': True})
 
-
+#This function removes the free game from the database when the user presses the button.
 @app.route('/removeSteam', methods=['POST'])
 def deleteGame():
     id = request.form['id']
@@ -142,7 +150,8 @@ def deleteGame():
     return redirect(f'/account?currentTab={2}')
 
 # fortnite page (lists skins)
-# maybe categorize between pickaxes or skins
+
+#This route opens the Fortnite Cosmetics page so we can favorite them. It also has pages so all of the information is not on the one long page.
 @app.route('/fortnite')
 def fortnite():
     if not session.get('authenticated'):
@@ -166,7 +175,7 @@ def fortnite():
     
     return render_template('fortnite.html', list=paginated_cosmetics, page=page, has_next=has_next, has_prev=has_prev, pfp=pfp)
 
-
+#This route does the same thing as the one before but it uses both Get and Post so the pages keep the filtering
 @app.route('/sortFortnite', methods=['GET', 'POST'])
 def sortFortnite():
     if not session.get('authenticated'):
@@ -198,7 +207,7 @@ def sortFortnite():
 
     return render_template('fortnite.html', list=paginated_cosmetics, page=page, has_next=has_next, has_prev=has_prev, pfp=pfp, type=type, rarity=rarity, search=search)
 
-
+#This function adds the cosmetic to the database. It takes all the information from the cosmetic and inserts that to the table.
 @app.route('/addFavorite', methods=['POST'])
 def favoriteCosmetic():
     image = request.form['image']
@@ -227,7 +236,7 @@ def favoriteCosmetic():
 
     return jsonify({'success': True})
 
-
+#This function removes the cosmetic from the database when the user presses the button.
 @app.route('/removeFavorite', methods=['POST'])
 def deleteCosmetic():
     id = request.form['id']
@@ -245,15 +254,18 @@ def deleteCosmetic():
 def login():
     return render_template('login.html')
 
+#Logout of your account sends you back to the login screen
 @app.route('/logout')
 def logout():
     session.clear()
     return render_template('login.html')
 
+#Sends you to the page to create your account.
 @app.route('/createAccount')
 def create_account():
     return render_template('signup.html')
 
+#This opens to the page that has all your favorited cosmetics and games.
 @app.route('/account')
 def account():
     current_tab = request.args.get('currentTab')
@@ -265,6 +277,7 @@ def account():
     
     return render_template('account.html', user=user, favoriteCosmetics=favoriteCosmetics, favoriteGames=favoriteGames, is_fortnite=is_fortnite)
 
+#This checks through your database and the shop api and it emails you the skin that you have favorited and is currently in the shop.
 @app.route('/emailUser', methods=['POST'])
 def emailAvailability():
     email_body = f""
@@ -295,7 +308,7 @@ def emailAvailability():
    
     return redirect(f'/account?currentTab={1}')
 
-
+#Home Page
 @app.route('/welcome')
 def welcome():
     if not session.get('authenticated'):
@@ -303,6 +316,7 @@ def welcome():
     
     return render_template('home.html', username=session['user']['firstName'])
 
+#This deletes your account
 @app.route('/delete')
 def deleteAccount():
     account = User.query.filter_by(user_id=session['user']['id']).first()
@@ -314,6 +328,7 @@ def deleteAccount():
     session.clear()
     return render_template('login.html')
 
+#This allows the user to login to use the website. So they can access the site
 @app.route('/login', methods=['POST'])
 def login_post():
     username = request.form['username']
@@ -333,7 +348,7 @@ def login_post():
         return render_template('home.html', username=session['user']['firstName'])
     return redirect('/')
 
-
+#This allows the user to sign up to make an account for the website.
 @app.route('/signup', methods=['POST'])
 def signup():
     fName = request.form['firstName']
@@ -362,7 +377,7 @@ def signup():
     return render_template('login.html')
 
 
-
+#Thes 4 functions below are just here to connect the data to the database, each function is a different table
 class User(db.Model):
     __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -415,28 +430,40 @@ class Free(db.Model):
     release_date = db.Column(db.String(256), nullable=True)
     url = db.Column(db.String(256), nullable=True)
 
-
+#This fetches all of the cosmetics from the fortnite api and filters depending on what is not null.
 def fetch_cosmetic(type, rarity, search):
     r = requests.get('https://fortnite-api.com/v2/cosmetics/br')
     all_cosmetics = r.json().get("data", [])
     filtered_cosmetics = all_cosmetics
     if type:
-        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("type", {}).get("value") == type]
-    if rarity:
-        filtered_cosmetics = [item for item in filtered_cosmetics if item.get("rarity", {}).get("backendValue") == "EFortRarity::"+rarity]
-    if search:
-        filtered_cosmetics = [item for item in filtered_cosmetics if search.lower() in item.get("name", "").lower()]
+        type = type.lower().strip()
+        filtered_cosmetics = [
+            item for item in filtered_cosmetics
+            if type in item.get("type", {}).get("value", "").lower()
+        ]
 
-    # if(filtered_cosmetics == all_cosmetics):
-        
+    if rarity:
+        rarity = rarity.lower().strip()
+        filtered_cosmetics = [
+            item for item in filtered_cosmetics
+            if rarity in item.get("rarity", {}).get("backendValue", "").lower().replace("efortrarity::", "")
+        ]
+
+    if search:
+        search = search.lower().strip()
+        filtered_cosmetics = [
+            item for item in filtered_cosmetics
+            if search in item.get("name", "").lower()
+        ]   
     return filtered_cosmetics
 
-
+#This gets all data from the Fortnite Shop API
 def fetch_fortnite_shop():
     r = requests.get('https://fortnite-api.com/v2/shop')
     all_cosmetics = r.json().get("data", [])
     return all_cosmetics
 
+#This gets all of the free games from the api and filters it depending on what values are not null.
 def fetch_free_games(genre, publisher, platform, search):
     r = requests.get('https://www.freetogame.com/api/games')
     all_games = r.json()
@@ -474,7 +501,6 @@ def fetch_free_games(genre, publisher, platform, search):
 
     return filtered_games
 
-
+#This makes it so when you filter by genre there are some weird names that repeat but I needed to get rid of the extra characters to have it all working
 def normalize_genre(genre_str):
-    # Normalize genres to lowercase and split by common separators
     return [g.strip().lower() for g in genre_str.replace('/', ',').replace('|', ',').split(',') if g.strip()]
